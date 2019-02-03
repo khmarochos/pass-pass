@@ -17,6 +17,7 @@ public class NoteController {
     @Autowired
     private NoteService noteService;
 
+    // TODO: implement mapping confguration (consider Swagger)
     @GetMapping("/note")
     public Note note(@RequestParam @NotNull long id) {
         Note note = noteService.getNote(id);
