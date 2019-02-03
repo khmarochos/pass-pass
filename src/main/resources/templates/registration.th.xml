@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+    <thlogic>
+        <attr sel="#title"
+              th:text="#{passpass.registration.title}"/>
+    </thlogic>
+</html>
