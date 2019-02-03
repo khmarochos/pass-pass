@@ -3,5 +3,7 @@
     <thlogic>
         <attr sel="#title"
               th:text="#{passpass.registration.title}"/>
+        <attr sel="#header"
+              th:text="#{passpass.registration.header}"/>
     </thlogic>
 </html>
