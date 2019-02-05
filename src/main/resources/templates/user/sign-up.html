@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!-- TODO: implement Thymeleaf -->
 <!-- TODO: implement i18n -->
+<!-- TODO: implement constants -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,19 +14,18 @@
     <link href="/static/css/style.css" rel="stylesheet">
 </head>
 <body>
-    <h1 id="header">HEADER MESSAGE</h1>
 
     <body class="gray-bg">
 
-    <div class="middle-box text-center loginscreen   animated fadeInDown">
+    <div class="middle-box text-center loginscreen animated fadeInDown">
         <div>
             <div>
 
-                <h1 class="logo-name">IN+</h1>
+                <h1 class="logo-name">хуй</h1>
 
             </div>
-            <h3>Register to IN+</h3>
-            <p>Create account to see it in action.</p>
+            <h3 id="please_register_m1">Register to IN+</h3>
+            <p id="please_register_m2">Create account to see it in action.</p>
             <form class="m-t" role="form" action="login.html">
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Name" required="">
@@ -48,11 +48,9 @@
         </div>
     </div>
 
-    <!-- Mainly scripts -->
     <script src="/static/js/jquery-3.1.1.min.js"></script>
     <script src="/static/js/popper.min.js"></script>
     <script src="/static/js/bootstrap.js"></script>
-    <!-- iCheck -->
     <script src="/static/js/plugins/iCheck/icheck.min.js"></script>
     <script>
         $(document).ready(function(){
