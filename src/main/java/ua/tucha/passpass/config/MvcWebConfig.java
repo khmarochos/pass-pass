@@ -1,6 +1,7 @@
 package ua.tucha.passpass.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Configuration
 @EnableWebMvc
+@ComponentScan(basePackages = "ua.tucha.passpass")
 public class MvcWebConfig implements WebMvcConfigurer {
 
     @Override

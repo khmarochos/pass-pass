@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import ua.tucha.passpass.model.Note;
 import ua.tucha.passpass.repository.NoteRepository;
 
-import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
@@ -42,7 +41,6 @@ public class NoteService implements FactoryBean<NoteService> {
         return NoteService.class;
     }
 
-    @PostConstruct
     private void onStart() {
         log.debug("A NoteService object is constructed, noteRepository is {}", noteRepository);
     }

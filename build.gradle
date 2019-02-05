@@ -41,4 +41,5 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// testImplementation 'org.springframework.security:spring-security-test'
+	compile group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
 }

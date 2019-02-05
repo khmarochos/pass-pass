@@ -2,7 +2,7 @@ package ua.tucha.passpass.util;
 
 public class RouteRegistry {
 
-    public class NoteRouteRegistry {
+    public static class NoteRouteRegistry {
         public static final String FIRST_LEVEL = "/note";
         public static final String CREATE      = FIRST_LEVEL + "/create";
         public static final String READ        = FIRST_LEVEL + "/read";
@@ -10,7 +10,7 @@ public class RouteRegistry {
         public static final String DELETE      = FIRST_LEVEL + "/delete";
     }
 
-    public class UserRouteRegistry {
+    public static class UserRouteRegistry {
         public static final String FIRST_LEVEL = "/user";
         public static final String CREATE      = FIRST_LEVEL + "/create";
         public static final String READ        = FIRST_LEVEL + "/read";
