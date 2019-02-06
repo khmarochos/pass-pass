@@ -7,8 +7,6 @@ import ua.tucha.passpass.model.Note;
 import ua.tucha.passpass.service.NoteService;
 import ua.tucha.passpass.util.RouteRegistry;
 
-import javax.validation.constraints.NotNull;
-
 @Slf4j
 @RestController
 @RequestMapping(RouteRegistry.NoteRouteRegistry.FIRST_LEVEL + "/*")

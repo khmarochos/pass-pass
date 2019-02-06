@@ -1,11 +1,32 @@
 <?xml version="1.0"?>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
     <thlogic>
+        <attr sel="footer"
+                th:replace="~{_snippets/footer :: footer}" />
         <attr sel="#title"
               th:text="#{passpass.registration.title}"/>
         <attr sel="#please_register_m1"
               th:text="#{passpass.registration.please_register_m1}"/>
         <attr sel="#please_register_m2"
               th:text="#{passpass.registration.please_register_m2}"/>
+        <attr sel="#registration_form"
+              th:action="@{${T(ua.tucha.passpass.util.RouteRegistry$UserRouteRegistry).SIGN_IN}}"/>
+        <attr sel="#registration_form">
+            <attr sel="#name_field"
+                  th:field="*{user.name}"
+                  th:placeholder="#{passpass.registration.form.placeholder.name}"/>
+            <attr sel="#email_field"
+                  th:placeholder="#{passpass.registration.form.placeholder.email}"/>
+            <attr sel="#password_field"
+                  th:placeholder="#{passpass.registration.form.placeholder.password}"/>
+            <attr sel="#policy_acceptance"
+                  th:text="#{passpass.registration.form.policy_acceptance}"/>
+            <attr sel="button"
+                  th:text="#{passpass.registration.form.submit}"/>
+            <attr sel="#already_registered"
+                  th:text="#{passpass.registration.form.alredy_registered}"/>
+            <attr sel="#login"
+                  th:text="#{passpass.registration.form.login}"/>
+        </attr>
     </thlogic>
 </html>
