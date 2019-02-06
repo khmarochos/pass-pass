@@ -16,7 +16,7 @@ public class UserController {
     ViewSelector viewSelector;
 
     @GetMapping(RouteRegistry.UserRouteRegistry.SIGN_UP)
-    public String registration(Model model) throws IllegalAccessException, ClassNotFoundException {
+    public String registration(Model model) {
         return(viewSelector.selectView("/user/sign-up"));
     }
 

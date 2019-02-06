@@ -17,45 +17,53 @@ import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 public class ViewSelector {
 
     // caches
-    private static final String[]
-            routeCategories = {"Note", "User"}; // TODO: make it dynamic
-    private static HashMap<String, HashMap<String, String>>
+    private static final HashMap<String, HashMap<String, String>>
             routeCategory = new HashMap<>();
+    private static final String
+            ROUTE_REGISTRY_CLASS_NAME = "ua.tucha.passpass.util.RouteRegistry";
 
     @PostConstruct
     public void init() throws ClassNotFoundException, IllegalAccessException {
-        for (String category : routeCategories) {
+        Class topClassToScan = Class.forName(ROUTE_REGISTRY_CLASS_NAME);
+        for (Class subClassToScan : topClassToScan.getDeclaredClasses()) {
             HashMap<String, String> routeView = new HashMap<>();
-            Class classToScan = Class.forName("ua.tucha.passpass.util.RouteRegistry$" + category + "RouteRegistry");
-            Field fields[] = classToScan.getDeclaredFields();
+            Field fields[] = subClassToScan.getDeclaredFields();
             for (Field field : fields) {
                 String route = (String) field.get(null);
                 routeView.put(route, route);
             }
-            routeCategory.put(category, routeView);
+            log.debug(">>> {}", this.getClass().getName());
+            Pattern p = Pattern.compile("^"
+                    + ROUTE_REGISTRY_CLASS_NAME.replace(".", "\\.")
+                    + "\\.(\\w+)RouteRegistry$"
+            );
+            Matcher m = p.matcher(subClassToScan.getCanonicalName());
+            if (m.find()) {
+                routeCategory.put(m.group(1), routeView);
+            }
         }
     }
 
     public String selectView(String route) {
         Pattern p = Pattern.compile("^/([^/]+)/.+$");
         Matcher m = p.matcher(route);
-        if(! m.find()) {
+        if (!m.find()) {
             log.debug("Pattern not matched for route {}", route);
             return null; // TODO: consider throwing an exception
         }
         String category = LOWER_HYPHEN.to(UPPER_CAMEL, m.group(1));
         HashMap<String, String> routeView = routeCategory.get(category);
-        if(routeView == null) {
+        if (routeView == null) {
             log.debug("Can't find information about route category {}", category);
             return null; // TODO: consider throwing an exception
         }
         String viewName = routeView.get(route);
-        if(viewName == null) {
+        if (viewName == null) {
             log.debug("Can't find information about route {}", route);
             return null; // TODO: consider throwing an exception
         }
         log.debug("Decided to choose {}", viewName);
-        return(viewName);
+        return (viewName);
     }
 
 }
