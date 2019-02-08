@@ -12,9 +12,7 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
     private static final String EMAIL_PATTERN = "^.+@tucha.+$";
 
     @Override
-    public void initialize(ValidEmail constraintAnnotation) {
-
-    }
+    public void initialize(ValidEmail constraintAnnotation) { }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
