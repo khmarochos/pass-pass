@@ -1,8 +1,10 @@
 package ua.tucha.passpass.model;
 
 import lombok.*;
+import ua.tucha.passpass.model.validator.ValidEmail;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -16,17 +18,23 @@ import java.util.Date;
 @NoArgsConstructor
 public class User {
 
+    public interface UserValidationGroup { }
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
 
-    @NotNull
+    @NotNull(groups = {UserValidationGroup.class})
+    @NotEmpty(groups = {UserValidationGroup.class})
     private String name;
 
-    @NotNull
+    @ValidEmail(groups = {UserValidationGroup.class})
+    @NotNull(groups = {UserValidationGroup.class})
+    @NotEmpty(groups = {UserValidationGroup.class})
     private String email;
 
-    @NotNull
+    @NotNull(groups = {UserValidationGroup.class})
+    @NotEmpty(groups = {UserValidationGroup.class})
     private String password;
 
     @NotNull

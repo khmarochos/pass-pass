@@ -10,14 +10,16 @@
         <attr sel="#please_register_m2"
               th:text="#{passpass.registration.please_register_m2}"/>
         <attr sel="#registration_form"
-              th:action="@{${T(ua.tucha.passpass.util.RouteRegistry$UserRouteRegistry).SIGN_IN}}"/>
+              th:action="@{${T(ua.tucha.passpass.util.RouteRegistry$UserRouteRegistry).SIGN_UP}}"/>
         <attr sel="#registration_form">
             <attr sel="#name_field"
                   th:field="*{user.name}"
                   th:placeholder="#{passpass.registration.form.placeholder.name}"/>
             <attr sel="#email_field"
+                  th:field="*{user.email}"
                   th:placeholder="#{passpass.registration.form.placeholder.email}"/>
             <attr sel="#password_field"
+                  th:field="*{user.password}"
                   th:placeholder="#{passpass.registration.form.placeholder.password}"/>
             <attr sel="#policy_acceptance"
                   th:text="#{passpass.registration.form.policy_acceptance}"/>

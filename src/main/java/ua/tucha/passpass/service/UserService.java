@@ -7,6 +7,7 @@ import ua.tucha.passpass.model.User;
 import ua.tucha.passpass.repository.UserRepository;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
@@ -22,8 +23,10 @@ public class UserService {
         return user.isEmpty() ? null : user.get();
     }
 
-    public User newUser() {
-        return new User();
+    public User newUser(User user) {
+        user.setCreated(new Date());
+        userRepository.save(user);
+        return user;
     }
 
 }
