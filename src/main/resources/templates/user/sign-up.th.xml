@@ -4,31 +4,31 @@
         <attr sel="footer"
                 th:replace="~{_snippets/footer :: footer}" />
         <attr sel="#title"
-              th:text="#{passpass.registration.title}"/>
+              th:text="#{registration.title}"/>
         <attr sel="#please_register_m1"
-              th:text="#{passpass.registration.please_register_m1}"/>
+              th:text="#{registration.please_register_m1}"/>
         <attr sel="#please_register_m2"
-              th:text="#{passpass.registration.please_register_m2}"/>
+              th:text="#{registration.please_register_m2}"/>
         <attr sel="#registration_form"
               th:action="@{${T(ua.tucha.passpass.util.RouteRegistry$UserRouteRegistry).SIGN_UP}}"/>
         <attr sel="#registration_form">
             <attr sel="#name_field"
                   th:field="*{user.name}"
-                  th:placeholder="#{passpass.registration.form.placeholder.name}"/>
+                  th:placeholder="#{registration.form.placeholder.name}"/>
             <attr sel="#email_field"
                   th:field="*{user.email}"
-                  th:placeholder="#{passpass.registration.form.placeholder.email}"/>
+                  th:placeholder="#{registration.form.placeholder.email}"/>
             <attr sel="#password_field"
                   th:field="*{user.password}"
-                  th:placeholder="#{passpass.registration.form.placeholder.password}"/>
+                  th:placeholder="#{registration.form.placeholder.password}"/>
             <attr sel="#policy_acceptance"
-                  th:text="#{passpass.registration.form.policy_acceptance}"/>
+                  th:text="#{registration.form.policy_acceptance}"/>
             <attr sel="button"
-                  th:text="#{passpass.registration.form.submit}"/>
+                  th:text="#{registration.form.submit}"/>
             <attr sel="#already_registered"
-                  th:text="#{passpass.registration.form.alredy_registered}"/>
+                  th:text="#{registration.form.alredy_registered}"/>
             <attr sel="#login"
-                  th:text="#{passpass.registration.form.login}"/>
+                  th:text="#{registration.form.login}"/>
         </attr>
     </thlogic>
 </html>
