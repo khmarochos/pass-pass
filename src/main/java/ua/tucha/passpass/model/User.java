@@ -1,12 +1,34 @@
 package ua.tucha.passpass.model;
 
+
 import lombok.*;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate5.type.EncryptedStringType;
 import ua.tucha.passpass.model.validator.ValidEmail;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.GenerationType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+
+@TypeDefs
+        ({
+                @TypeDef(
+                        name="encryptedString",
+                        typeClass= EncryptedStringType.class,
+                        parameters={
+                                @Parameter(name = "encryptorRegisteredName", value = "STRING_ENCRYPTOR")
+                        }
+                )
+        })
 
 @Table
 @Entity
@@ -18,23 +40,25 @@ import java.util.Date;
 @NoArgsConstructor
 public class User {
 
-    public interface UserValidationGroup { }
+    public interface CreateUserGroup { }
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
-    @NotNull(groups = {UserValidationGroup.class})
-    @NotEmpty(groups = {UserValidationGroup.class})
+    @NotNull(groups = {CreateUserGroup.class})
+    @NotEmpty(groups = {CreateUserGroup.class})
     private String name;
 
-    @ValidEmail(groups = {UserValidationGroup.class})
-    @NotNull(groups = {UserValidationGroup.class})
-    @NotEmpty(groups = {UserValidationGroup.class})
+    @ValidEmail(groups = {CreateUserGroup.class})
+    @NotNull(groups = {CreateUserGroup.class})
+    @NotEmpty(groups = {CreateUserGroup.class})
+    @Column(unique=true)
     private String email;
 
-    @NotNull(groups = {UserValidationGroup.class})
-    @NotEmpty(groups = {UserValidationGroup.class})
+    @NotNull(groups = {CreateUserGroup.class})
+    @NotEmpty(groups = {CreateUserGroup.class})
+    @Type(type="encryptedString")
     private String password;
 
     @NotNull

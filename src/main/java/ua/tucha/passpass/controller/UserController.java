@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping(RouteRegistry.UserRouteRegistry.SIGN_UP)
-    public String registration(@ModelAttribute("user") @Validated(User.UserValidationGroup.class) User user) {
+    public String registration(@ModelAttribute("user") @Validated(User.CreateUserGroup.class) User user) {
         log.debug("User is {}", user);
         userService.newUser(user);
         return "redirect:" + RouteRegistry.UserRouteRegistry.SIGN_UP;

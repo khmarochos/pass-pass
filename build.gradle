@@ -4,6 +4,9 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		flatDir {
+			dirs 'libs'
+		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -26,6 +29,9 @@ bootJar {
 
 repositories {
 	mavenCentral()
+	flatDir {
+		dirs 'libs'
+	}
 }
 
 dependencies {
@@ -43,4 +49,6 @@ dependencies {
 	// testImplementation 'org.springframework.security:spring-security-test'
 	compile group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
 	compile group: 'commons-validator', name: 'commons-validator', version: '1.6'
+	compile group: 'org.jasypt', name: 'jasypt', version: '1.9.2'
+	compile group: 'org.jasypt', name: 'jasypt-hibernate5', version: '1.9.3-SNAPSHOT'
 }
