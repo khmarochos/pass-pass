@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.tucha.passpass.model.User;
 import ua.tucha.passpass.repository.UserRepository;
+import ua.tucha.passpass.service.exception.EmailNotUniqueException;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -27,11 +28,19 @@ public class UserService {
         return user.isEmpty() ? null : user.get();
     }
 
-    public User createNewUserAccount(User user) {
+    public User createNewUserAccount(User user) throws EmailNotUniqueException {
+        if(emailExists(user.getEmail())) {
+            throw new EmailNotUniqueException();
+        }
         Date currentDate = new Date();
         user.setCreated(currentDate);
         userRepository.save(user);
         return user;
+    }
+
+    private boolean emailExists(String email) {
+        User user = userRepository.findByEmail(email);
+        return user != null;
     }
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import ua.tucha.passpass.model.User;
 import ua.tucha.passpass.service.UserService;
+import ua.tucha.passpass.service.exception.EmailNotUniqueException;
 import ua.tucha.passpass.util.RouteRegistry.UserRouteRegistry;
 import ua.tucha.passpass.util.ViewSelector;
 
@@ -21,6 +22,12 @@ import ua.tucha.passpass.util.ViewSelector;
 @Controller
 @RequestMapping(UserRouteRegistry.FIRST_LEVEL + "/*")
 public class UserController {
+
+    @ModelAttribute("user")
+    public User getUser() {
+        return new User();
+    }
+
 
     private final UserService userService;
     private final ViewSelector viewSelector;
@@ -33,11 +40,9 @@ public class UserController {
 
     @GetMapping(UserRouteRegistry.SIGN_UP)
     public ModelAndView signUp() {
-        return
-                new ModelAndView(
-                        viewSelector.selectView(UserRouteRegistry.SIGN_UP),
-                        "user", new User()
-        );
+        ModelAndView modelAndView = new ModelAndView(viewSelector.selectView(UserRouteRegistry.SIGN_UP));
+        modelAndView.addObject(getUser());
+        return modelAndView;
     }
 
     @PostMapping(UserRouteRegistry.SIGN_UP)
@@ -48,12 +53,16 @@ public class UserController {
             Errors errors
     ) {
 //    public String registration(@ModelAttribute("user") @Validated(User.CreateUserGroup.class) User user) {
-        userService.createNewUserAccount(user);
-        return
-                new ModelAndView(
-                        "redirect:" + UserRouteRegistry.SIGN_UP,
-                        "user", user
-                );
+        try {
+            userService.createNewUserAccount(user);
+        } catch(EmailNotUniqueException e) {
+            result.rejectValue(
+                    "email",
+                    "validator.email.exists",
+                    new String[]{ user.getEmail() },
+                    "OOPS");
+        }
+        return new ModelAndView(viewSelector.selectView(UserRouteRegistry.SIGN_UP));
     }
 
 }
