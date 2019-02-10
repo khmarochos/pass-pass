@@ -67,7 +67,7 @@ public class MvcWebConfig implements WebMvcConfigurer {
     @Lazy(false)
     public PBEStringEncryptor strongEncryptor() {
         String encryptorKey = environment.getRequiredProperty("encryptorKey");
-        PooledPBEStringEncryptor strongEncryptor = new PooledPBEStringEncryptor(); // There are few version of PBEStringEncryptor, I have used here PooledPBEStringEncryptor.
+        PooledPBEStringEncryptor strongEncryptor = new PooledPBEStringEncryptor();
         strongEncryptor.setPassword(encryptorKey);
         strongEncryptor.setAlgorithm("PBEWithMD5AndDES");
         strongEncryptor.setPoolSize(4);

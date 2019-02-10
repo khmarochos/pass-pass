@@ -15,16 +15,21 @@ import java.util.Optional;
 public class UserService {
 
     // repository
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User getUser(@NotNull long userId) {
         Optional<User> user = userRepository.findById(userId);
         return user.isEmpty() ? null : user.get();
     }
 
-    public User newUser(User user) {
-        user.setCreated(new Date());
+    public User createNewUserAccount(User user) {
+        Date currentDate = new Date();
+        user.setCreated(currentDate);
         userRepository.save(user);
         return user;
     }

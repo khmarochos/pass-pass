@@ -53,8 +53,12 @@ public class User {
     @ValidEmail(groups = {CreateUserGroup.class})
     @NotNull(groups = {CreateUserGroup.class})
     @NotEmpty(groups = {CreateUserGroup.class})
-    @Column(unique=true)
     private String email;
+
+    @NotNull(groups = {CreateUserGroup.class})
+    @NotEmpty(groups = {CreateUserGroup.class})
+    @Column(unique=true)
+    private String email_hash;
 
     @NotNull(groups = {CreateUserGroup.class})
     @NotEmpty(groups = {CreateUserGroup.class})
