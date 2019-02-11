@@ -33,7 +33,7 @@ public class ViewSelector {
                 routeView.put(route, route);
             }
             log.debug(">>> {}", this.getClass().getName());
-            // Java regexp in a literal string look wretched... :-\\
+            // Java regexps in a literal string look wretched... :-\\
             Pattern p = Pattern.compile("^"
                     + ROUTE_REGISTRY_CLASS_NAME.replace(".", "\\.")
                     + "\\.(\\w+)RouteRegistry$"
@@ -46,6 +46,8 @@ public class ViewSelector {
     }
 
     public String selectView(String route) {
+
+        // Determine the category depending on the first level ("/user", "/note", etc.)
         Pattern p = Pattern.compile("^/([^/]+)/.+$");
         Matcher m = p.matcher(route);
         if (!m.find()) {
@@ -53,18 +55,26 @@ public class ViewSelector {
             return null; // TODO: consider throwing an exception
         }
         String category = LOWER_HYPHEN.to(UPPER_CAMEL, m.group(1));
+
+        // Choose the category's registry
         HashMap<String, String> routeView = routeCategory.get(category);
         if (routeView == null) {
+            // The registry hasn't been found
             log.debug("Can't find information about route category {}", category);
             return null; // TODO: consider throwing an exception
         }
+
+        // Select the view name
         String viewName = routeView.get(route);
         if (viewName == null) {
             log.debug("Can't find information about route {}", route);
             return null; // TODO: consider throwing an exception
         }
         log.debug("Decided to choose {}", viewName);
+
+        // That's all
         return (viewName);
+
     }
 
 }

@@ -3,15 +3,14 @@ package ua.tucha.passpass.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.tucha.passpass.model.User;
 import ua.tucha.passpass.service.UserService;
 import ua.tucha.passpass.service.exception.EmailNotUniqueException;
@@ -39,18 +38,23 @@ public class UserController {
     }
 
     @GetMapping(UserRouteRegistry.SIGN_UP)
-    public ModelAndView signUp() {
-        ModelAndView modelAndView = new ModelAndView(viewSelector.selectView(UserRouteRegistry.SIGN_UP));
-        modelAndView.addObject(getUser());
-        return modelAndView;
+    public String signUp(
+//            @ModelAttribute("user") User user, BindingResult result
+            Model model
+    ) {
+        if(!model.containsAttribute("user")) {
+            model.addAttribute("user", getUser());
+        }
+        log.debug("GET: Model >>> {}", model);
+//        log.debug("GET: BindingResult >>> {}, {}, {}", result, result.hasErrors(), result.hasFieldErrors());
+//        log.debug("GET: Errors >>> {}", result.hasErrors());
+        return viewSelector.selectView(UserRouteRegistry.SIGN_UP);
     }
 
     @PostMapping(UserRouteRegistry.SIGN_UP)
-    public ModelAndView signUp(
-            @ModelAttribute("user") @Validated(User.CreateUserGroup.class) User user,
-            BindingResult result,
-            WebRequest request,
-            Errors errors
+    public String signUp(
+            @ModelAttribute("user") @Validated(User.CreateUserGroup.class) User user, BindingResult result,
+            RedirectAttributes redirectAttributes
     ) {
 //    public String registration(@ModelAttribute("user") @Validated(User.CreateUserGroup.class) User user) {
         try {
@@ -58,11 +62,14 @@ public class UserController {
         } catch(EmailNotUniqueException e) {
             result.rejectValue(
                     "email",
-                    "validator.email.exists",
-                    new String[]{ user.getEmail() },
+                    "validator.email.exists", new String[]{ user.getEmail() },
                     "OOPS");
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
+            redirectAttributes.addFlashAttribute("user", user);
+            log.debug("POST: BindingResult >>> {}, {}, {}", result, result.hasErrors(), result.hasFieldErrors());
+
         }
-        return new ModelAndView(viewSelector.selectView(UserRouteRegistry.SIGN_UP));
+        return "redirect:" + viewSelector.selectView(UserRouteRegistry.SIGN_UP);
     }
 
 }
