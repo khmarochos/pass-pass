@@ -27,7 +27,6 @@ public class UserController {
         return new User();
     }
 
-
     private final UserService userService;
     private final ViewSelector viewSelector;
 
