@@ -18,7 +18,7 @@
             <attr sel="#email_field"
                   th:field="*{email}"
                   th:placeholder="#{registration.form.placeholder.email}"
-                  th:classappend="${#fields.errors('email')} ? 'is-invalid' : 'is-valid'"/>
+                  th:errorclass="is-invalid" />
             <attr sel="#email_field_errors"
                   th:each="error: ${#fields.errors('email')}"
                   th:text="${error}"/>
