@@ -1,23 +1,23 @@
 package ua.tucha.passpass.model.validator;
 
+import org.apache.commons.validator.routines.EmailValidator;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
+public class UserEmailValidator implements ConstraintValidator<ValidEmail, String> {
 
-    private static org.apache.commons.validator.routines.EmailValidator emailValidator
-             = org.apache.commons.validator.routines.EmailValidator.getInstance();
+    private static EmailValidator emailValidator = EmailValidator.getInstance();
 
     @Override
     public void initialize(ValidEmail constraintAnnotation) { }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return validateEmail(value);
+        return validateUserEmail(value);
     }
 
-    private boolean validateEmail(String email) {
+    private boolean validateUserEmail(String email) {
         return emailValidator.getInstance().isValid(email);
     }
-
 }

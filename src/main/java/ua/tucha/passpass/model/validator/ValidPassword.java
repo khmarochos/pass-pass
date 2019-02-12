@@ -11,10 +11,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = UserEmailValidator.class)
+@Constraint(validatedBy = UserPasswordValidator.class)
 @Documented
-public @interface ValidEmail {
-    String message() default "{validator.email.invalid}";
+public @interface ValidPassword {
+    String message() default "{validator.password.invalid}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

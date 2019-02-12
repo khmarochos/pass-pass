@@ -24,7 +24,11 @@
                   th:text="${error}"/>
             <attr sel="#password_field"
                   th:field="*{password}"
-                  th:placeholder="#{registration.form.placeholder.password}"/>
+                  th:placeholder="#{registration.form.placeholder.password}"
+                  th:errorclass="is-invalid" />
+            <attr sel="#password_field_errors"
+                  th:each="error: ${#fields.errors('password')}"
+                  th:text="${error}"/>
             <attr sel="#policy_acceptance"
                   th:text="#{registration.form.policy_acceptance}"/>
             <attr sel="button"

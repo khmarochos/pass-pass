@@ -1,20 +1,26 @@
 package ua.tucha.passpass.model;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.jasypt.hibernate5.type.EncryptedStringType;
 import ua.tucha.passpass.model.validator.ValidEmail;
+import ua.tucha.passpass.model.validator.ValidPassword;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.GenerationType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -60,6 +66,7 @@ public class User {
     @Column(unique=true)
     private String email_hash;
 
+    @ValidPassword(groups = {CreateUserGroup.class})
     @NotNull(groups = {CreateUserGroup.class})
     @NotEmpty(groups = {CreateUserGroup.class})
     @Type(type="encryptedString")

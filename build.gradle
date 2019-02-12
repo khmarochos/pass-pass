@@ -51,4 +51,5 @@ dependencies {
 	compile group: 'commons-validator', name: 'commons-validator', version: '1.6'
 	compile group: 'org.jasypt', name: 'jasypt', version: '1.9.2'
 	compile group: 'org.jasypt', name: 'jasypt-hibernate5', version: '1.9.3-SNAPSHOT'
+	compile group: 'org.passay', name: 'passay', version: '1.4.0'
 }
