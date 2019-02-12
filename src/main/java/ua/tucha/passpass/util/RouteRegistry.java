@@ -22,7 +22,7 @@ public class RouteRegistry {
 
     public static class FailureRouteRegistry {
         public static final String FIRST_LEVEL              = "/failure";
-        public static final String PAGE_NOT_FOUND           = FIRST_LEVEL + "/404";
+        public static final String NOT_FOUND                = FIRST_LEVEL + "/404";
         public static final String INTERNAL_SERVER_ERROR    = FIRST_LEVEL + "/500";
         public static final String DEFAULT                  = FIRST_LEVEL + "/default";
     }
