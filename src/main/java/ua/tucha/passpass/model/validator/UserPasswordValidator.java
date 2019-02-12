@@ -12,19 +12,29 @@ import org.passay.RuleResultDetail;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Map;
+
+import static com.google.common.base.CaseFormat.LOWER_UNDERSCORE;
+import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 
 @Slf4j
 public class UserPasswordValidator implements ConstraintValidator<ValidPassword, String> {
 
     private class MessageResolverProxy implements MessageResolver {
         private final PropertiesMessageResolver messageResolver = new PropertiesMessageResolver();
+        private static final String MESSAGE_LABEL_PREFIX = "validator.password.";
         @Override
         public String resolve(@NotNull RuleResultDetail detail) {
+            String errorCode
+                    = MESSAGE_LABEL_PREFIX
+                    + UPPER_UNDERSCORE.to(LOWER_UNDERSCORE, detail.getErrorCode());
+            Map<String, Object> errorDetails = detail.getParameters();
             return
                     messageResolver.resolve(
                             new RuleResultDetail(
-                                    "validator.password." + detail.getErrorCode(),
-                                    detail.getParameters()
+                                    errorCode,
+                                    errorDetails
                             )
                     );
         }
@@ -42,20 +52,23 @@ public class UserPasswordValidator implements ConstraintValidator<ValidPassword,
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (!validateUserEmail(value)) {
+        ArrayList<String> messageContainer = new ArrayList<>();
+        if (!validateUserEmail(value, messageContainer)) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("{validator.password.default}").addConstraintViolation();
+            for(String messageLabel: messageContainer) {
+                context.buildConstraintViolationWithTemplate("{" + messageLabel + "}").addConstraintViolation();
+            }
             return false;
         }
         return true;
     }
 
-    private boolean validateUserEmail(@NotNull String password) {
-        log.debug("Password validator validates the password :-)");
+    private boolean validateUserEmail(@NotNull String password, @NotNull ArrayList<String> messageContainer) {
         PasswordData passwordData = new PasswordData(password);
         RuleResult validate = passwordValidator.validate(passwordData);
         if (!validate.isValid()) {
             RuleResultDetail ruleResultDetail = validate.getDetails().get(0);
+            messageContainer.addAll(passwordValidator.getMessages(validate));
             log.debug("Password validator is disappointed: {}", passwordValidator.getMessages(validate));
             return false;
         }
