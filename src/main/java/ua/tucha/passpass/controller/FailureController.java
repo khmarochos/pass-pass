@@ -44,7 +44,7 @@ public class FailureController implements ErrorController {
         Integer statusCode = Integer.valueOf(status.toString());
         String viewHandler;
         log.debug("errorCodeRoutes = {}", errorCodeRoutes);
-        viewHandler = (viewHandler = errorCodeRoutes.get(statusCode)) == null
+        viewHandler = (viewHandler = errorCodeRoutes.get(statusCode)) != null
                 ? viewHandler
                 : FailureRouteRegistry.DEFAULT;
         return(viewSelector.selectView(viewHandler));
