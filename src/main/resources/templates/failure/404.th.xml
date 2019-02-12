@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+    <thlogic>
+        <attr sel="footer"
+              th:replace="~{_snippets/footer :: footer}" />
+        <attr sel="#title"
+              th:text="${failure.title}"/>
+        <attr sel="failure_code"
+              th:text="${failure.code}"/>
+        <attr sel="#failure_name"
+              th:text="${failure.getName()}"/>
+        <attr sel="#failure_description"
+              th:text="${failure.description}"/>
+        <attr sel="#href_index"
+              th:text="#{failure.go_to_index}"/>
+    </thlogic>
+</html>
