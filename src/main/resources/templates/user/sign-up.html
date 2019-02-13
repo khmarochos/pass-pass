@@ -30,18 +30,19 @@
                 </div>
                 <div class="form-group">
                     <input id="email_field" type="email" class="form-control" placeholder="EMAIL" required="">
-                    <p id="email_field_errors" class="invalid-feedback"></p>
+                    <div id="email_field_errors" class="invalid-feedback"></div>
                 </div>
                 <div class="form-group">
                     <input id="password_field" type="password" class="form-control" placeholder="PASSWORD" required="">
-                    <p id="password_field_errors" class="invalid-feedback"></p>
+                    <div id="password_field_errors" class="invalid-feedback"></div>
                 </div>
                 <div class="form-group">
                     <div class="checkbox i-checks">
                         <label>
-                            <input type="checkbox">&nbsp;<span id="policy_acceptance">I AGREE THE TERMS AND POLICY</span>
+                            <input type="checkbox" id="policy_acceptance_checkbox" value="true">&nbsp;<span id="policy_acceptance">I AGREE THE TERMS AND POLICY</span>
                         </label>
                     </div>
+                    <div id="policy_acceptance_checkbox_errors" class="invalid-feedback"></div>
                 </div>
                 <button type="submit" class="btn btn-primary block full-width m-b">REGISTER</button>
 

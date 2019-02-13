@@ -44,7 +44,7 @@ public class UserController {
         if(!model.containsAttribute("user")) {
             model.addAttribute("user", getUser());
         }
-        log.debug("GET: Model >>> {}", model);
+//        log.debug("GET: Model >>> {}", model);
 //        log.debug("GET: BindingResult >>> {}, {}, {}", result, result.hasErrors(), result.hasFieldErrors());
 //        log.debug("GET: Errors >>> {}", result.hasErrors());
         return viewSelector.selectView(UserRouteRegistry.SIGN_UP);
@@ -55,17 +55,17 @@ public class UserController {
             @ModelAttribute("user") @Validated(User.CreateUserGroup.class) User user, BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
-//    public String registration(@ModelAttribute("user") @Validated(User.CreateUserGroup.class) User user) {
+
         try {
             userService.createNewUserAccount(user);
         } catch(EmailNotUniqueException e) {
             result.rejectValue(
                     "email",
                     "validator.email.exists", new String[]{ user.getEmail() },
-                    "OOPS");
+                    "This email address is already registered");
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
             redirectAttributes.addFlashAttribute("user", user);
-            log.debug("POST: BindingResult >>> {}, {}, {}", result, result.hasErrors(), result.hasFieldErrors());
+//            log.debug("POST: BindingResult >>> {}, {}, {}", result, result.hasErrors(), result.hasFieldErrors());
 
         }
         return "redirect:" + viewSelector.selectView(UserRouteRegistry.SIGN_UP);

@@ -61,8 +61,8 @@ public class User {
     @NotEmpty(groups = {CreateUserGroup.class})
     private String email;
 
-    @NotNull
-    @NotEmpty
+//    @NotNull
+//    @NotEmpty
     @Column(unique=true)
     private String email_hash;
 
@@ -78,5 +78,8 @@ public class User {
     private Date disabled;
 
     private Date removed;
+
+    @NotNull
+    private boolean policyAccepted;
 
 }

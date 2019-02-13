@@ -67,9 +67,7 @@ public class UserPasswordValidator implements ConstraintValidator<ValidPassword,
         PasswordData passwordData = new PasswordData(password);
         RuleResult validate = passwordValidator.validate(passwordData);
         if (!validate.isValid()) {
-            RuleResultDetail ruleResultDetail = validate.getDetails().get(0);
             messageContainer.addAll(passwordValidator.getMessages(validate));
-            log.debug("Password validator is disappointed: {}", passwordValidator.getMessages(validate));
             return false;
         }
         return true;
