@@ -18,6 +18,7 @@ public class RouteRegistry {
         public static final String DELETE                   = FIRST_LEVEL + "/delete";
         public static final String SIGN_UP                  = FIRST_LEVEL + "/sign-up"; // not the same as create
         public static final String SIGN_IN                  = FIRST_LEVEL + "/sign-in";
+        public static final String CONFIRM_EMAIL            = FIRST_LEVEL + "/confirm-email";
     }
 
     public static class FailureRouteRegistry {

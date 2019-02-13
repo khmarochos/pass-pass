@@ -56,19 +56,23 @@ public class UserController {
             RedirectAttributes redirectAttributes
     ) {
 
+        String nextStep;
+
         try {
             userService.createNewUserAccount(user);
+            nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
         } catch(EmailNotUniqueException e) {
             result.rejectValue(
                     "email",
                     "validator.email.exists", new String[]{ user.getEmail() },
                     "This email address is already registered");
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
-            redirectAttributes.addFlashAttribute("user", user);
-//            log.debug("POST: BindingResult >>> {}, {}, {}", result, result.hasErrors(), result.hasFieldErrors());
+            nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.SIGN_UP);
 
         }
-        return "redirect:" + viewSelector.selectView(UserRouteRegistry.SIGN_UP);
+        // These objects are needed in any case
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
+        redirectAttributes.addFlashAttribute("user", user);
+        return nextStep;
     }
 
 }
