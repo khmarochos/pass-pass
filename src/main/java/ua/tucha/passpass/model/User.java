@@ -82,4 +82,7 @@ public class User {
     @NotNull
     private boolean policyAccepted;
 
+    @NotNull
+    private boolean enabled;
+
 }

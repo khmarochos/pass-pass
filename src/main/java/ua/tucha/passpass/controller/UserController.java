@@ -36,6 +36,13 @@ public class UserController {
         this.viewSelector = viewSelector;
     }
 
+    @GetMapping(UserRouteRegistry.CONFIRM_EMAIL)
+    public String confirmEmail(
+            Model model
+    ) {
+        return viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
+    }
+
     @GetMapping(UserRouteRegistry.SIGN_UP)
     public String signUp(
 //            @ModelAttribute("user") User user, BindingResult result
@@ -55,19 +62,17 @@ public class UserController {
             @ModelAttribute("user") @Validated(User.CreateUserGroup.class) User user, BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
-
-        String nextStep;
-
-        try {
-            userService.createNewUserAccount(user);
-            nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
-        } catch(EmailNotUniqueException e) {
-            result.rejectValue(
-                    "email",
-                    "validator.email.exists", new String[]{ user.getEmail() },
-                    "This email address is already registered");
-            nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.SIGN_UP);
-
+        String nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.SIGN_UP);
+        if(!result.hasErrors()) {
+            try {
+                userService.createNewUserAccount(user);
+                nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
+            } catch (EmailNotUniqueException e) {
+                result.rejectValue(
+                        "email",
+                        "validator.email.exists", new String[]{user.getEmail()},
+                        "This email address is already registered");
+            }
         }
         // These objects are needed in any case
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", result);

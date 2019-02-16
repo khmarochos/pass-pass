@@ -53,7 +53,7 @@ public class UserPasswordValidator implements ConstraintValidator<ValidPassword,
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         ArrayList<String> messageContainer = new ArrayList<>();
-        if (!validateUserEmail(value, messageContainer)) {
+        if (!validateUserPassword(value, messageContainer)) {
             context.disableDefaultConstraintViolation();
             for(String messageLabel: messageContainer) {
                 context.buildConstraintViolationWithTemplate("{" + messageLabel + "}").addConstraintViolation();
@@ -63,7 +63,7 @@ public class UserPasswordValidator implements ConstraintValidator<ValidPassword,
         return true;
     }
 
-    private boolean validateUserEmail(@NotNull String password, @NotNull ArrayList<String> messageContainer) {
+    private boolean validateUserPassword(@NotNull String password, @NotNull ArrayList<String> messageContainer) {
         PasswordData passwordData = new PasswordData(password);
         RuleResult validate = passwordValidator.validate(passwordData);
         if (!validate.isValid()) {

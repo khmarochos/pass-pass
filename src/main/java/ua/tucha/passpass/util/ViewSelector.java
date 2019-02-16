@@ -51,7 +51,7 @@ public class ViewSelector {
         Pattern p = Pattern.compile("^/([^/]+)/.+$");
         Matcher m = p.matcher(route);
         if (!m.find()) {
-            log.debug("Pattern not matched for route {}", route);
+            log.error("Pattern not matched for route {}", route);
             return null; // TODO: consider throwing an exception
         }
         String category = LOWER_HYPHEN.to(UPPER_CAMEL, m.group(1));
@@ -60,17 +60,16 @@ public class ViewSelector {
         HashMap<String, String> routeView = routeCategory.get(category);
         if (routeView == null) {
             // The registry hasn't been found
-            log.debug("Can't find information about route category {}", category);
+            log.error("Can't find information about route category {}", category);
             return null; // TODO: consider throwing an exception
         }
 
         // Select the view name
         String viewName = routeView.get(route);
         if (viewName == null) {
-            log.debug("Can't find information about route {}", route);
+            log.error("Can't find information about route {}", route);
             return null; // TODO: consider throwing an exception
         }
-        log.debug("Decided to choose {}", viewName);
 
         // That's all
         return (viewName);
