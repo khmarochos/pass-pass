@@ -44,4 +44,8 @@ public class UserService {
         return user != null;
     }
 
+    public String createVerificationToken(User user, String token) {
+        return "";
+    }
+
 }

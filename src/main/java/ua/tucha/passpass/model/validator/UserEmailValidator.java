@@ -25,8 +25,6 @@ public class UserEmailValidator implements ConstraintValidator<ValidEmail, Strin
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (!emailValidator.isValid(value)) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("{validator.email.invalid}").addConstraintViolation();
             return false;
         } else if(userService.emailExists(value)) {
             context.disableDefaultConstraintViolation();

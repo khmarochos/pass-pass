@@ -5,13 +5,15 @@ import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.hibernate5.encryptor.HibernatePBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.CacheControl;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -26,8 +28,12 @@ import java.util.concurrent.TimeUnit;
 @ComponentScan(basePackages = "ua.tucha.passpass")
 public class MvcWebConfig implements WebMvcConfigurer {
 
+    private final PropertyResolver environment;
+
     @Autowired
-    private PropertyResolver environment;
+    public MvcWebConfig(PropertyResolver environment) {
+        this.environment = environment;
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -38,25 +44,19 @@ public class MvcWebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource
-                = new ReloadableResourceBundleMessageSource();
+    public LocalValidatorFactoryBean getValidator() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
-    }
-
-    @Bean
-    public LocalValidatorFactoryBean getValidator() {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        bean.setValidationMessageSource(messageSource());
+        bean.setValidationMessageSource(messageSource);
         return bean;
     }
 
     @Bean
     @Autowired
     @Lazy(false)
-    public HibernatePBEStringEncryptor hibernateStringEncryptor(PBEStringEncryptor strongEncryptor){
+    public HibernatePBEStringEncryptor hibernateStringEncryptor(PBEStringEncryptor strongEncryptor) {
         HibernatePBEStringEncryptor hibernateEncryptor = new HibernatePBEStringEncryptor();
         hibernateEncryptor.setRegisteredName("STRING_ENCRYPTOR");
         hibernateEncryptor.setEncryptor(strongEncryptor);
@@ -73,6 +73,13 @@ public class MvcWebConfig implements WebMvcConfigurer {
         strongEncryptor.setPoolSize(4);
 
         return strongEncryptor;
+    }
+
+    @Bean(name = "applicationEventMulticaster")
+    public ApplicationEventMulticaster simpleApplicationEventMulticaster() {
+        SimpleApplicationEventMulticaster eventMulticaster = new SimpleApplicationEventMulticaster();
+        eventMulticaster.setTaskExecutor(new SimpleAsyncTaskExecutor());
+        return eventMulticaster;
     }
 
 }
