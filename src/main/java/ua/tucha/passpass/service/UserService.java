@@ -28,12 +28,13 @@ public class UserService {
         return user.isEmpty() ? null : user.get();
     }
 
-    public User createNewUserAccount(User user) throws EmailNotUniqueException {
+    public User createUser(User user) throws EmailNotUniqueException {
         if(emailExists(user.getEmail())) {
             throw new EmailNotUniqueException();
         }
         Date currentDate = new Date();
         user.setCreated(currentDate);
+        user.setEmail_hash("13");
         user.setEnabled(false);
         userRepository.save(user);
         return user;
@@ -42,10 +43,6 @@ public class UserService {
     public boolean emailExists(String email) {
         User user = userRepository.findByEmail(email);
         return user != null;
-    }
-
-    public String createVerificationToken(User user, String token) {
-        return "";
     }
 
 }

@@ -8,16 +8,13 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.Calendar;
 
 @Table
 @Entity
@@ -29,25 +26,16 @@ import java.util.Calendar;
 @NoArgsConstructor
 public class VerificationToken {
 
-    private static final int EXPIRATION = 60 * 24;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String token;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name="user")
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(nullable = false, name = "owner", referencedColumnName = "id")
     private User user;
 
     private Date expiry;
-
-    private Date calculateExpiryDate(int expiryTime) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
-        calendar.add(Calendar.MINUTE, expiryTime);
-        return new Date(calendar.getTime().getTime());
-    }
 
 }

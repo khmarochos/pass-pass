@@ -49,8 +49,8 @@ public class User {
     public interface CreateUserGroup { }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @NotNull(groups = {CreateUserGroup.class})
     @NotEmpty(groups = {CreateUserGroup.class})
@@ -61,8 +61,8 @@ public class User {
     @NotEmpty(groups = {CreateUserGroup.class})
     private String email;
 
-//    @NotNull
-//    @NotEmpty
+    @NotNull
+    @NotEmpty
     @Column(unique=true)
     private String email_hash;
 
@@ -85,4 +85,6 @@ public class User {
     @NotNull
     private boolean enabled;
 
+    //@OneToMany(mappedBy = "user")
+    //private List<VerificationToken> verificationTokenList;
 }

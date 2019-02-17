@@ -3,7 +3,6 @@ package ua.tucha.passpass.controller;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
@@ -22,13 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.tucha.passpass.model.User;
+import ua.tucha.passpass.model.VerificationToken;
 import ua.tucha.passpass.service.UserService;
+import ua.tucha.passpass.service.VerificationTokenService;
 import ua.tucha.passpass.service.exception.EmailNotUniqueException;
 import ua.tucha.passpass.util.RouteRegistry.UserRouteRegistry;
 import ua.tucha.passpass.util.ViewSelector;
 
 import java.util.Locale;
-import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -41,15 +41,18 @@ public class UserController {
     }
 
     private final UserService userService;
+    private final VerificationTokenService verificationTokenService;
     private final ViewSelector viewSelector;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public UserController(
             UserService userService,
+            VerificationTokenService verificationTokenService,
             ViewSelector viewSelector,
             ApplicationEventPublisher eventPublisher) {
         this.userService = userService;
+        this.verificationTokenService = verificationTokenService;
         this.viewSelector = viewSelector;
         this.eventPublisher = eventPublisher;
     }
@@ -84,7 +87,7 @@ public class UserController {
         if(!result.hasErrors()) {
             User userRegistered;
             try {
-                userRegistered = userService.createNewUserAccount(user);
+                userRegistered = userService.createUser(user);
                 nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
             } catch (EmailNotUniqueException e) {
                 result.rejectValue(
@@ -110,13 +113,13 @@ public class UserController {
     }
 
     @Getter
-    public class SignUpCompletedEvent extends ApplicationEvent {
+    private class SignUpCompletedEvent extends ApplicationEvent {
 
         private String appUrl;
         private Locale locale;
         private User user;
 
-        public SignUpCompletedEvent(User user, Locale locale, String appUrl) {
+        private SignUpCompletedEvent(User user, Locale locale, String appUrl) {
             super(user);
             this.user = user;
             this.locale = locale;
@@ -125,7 +128,7 @@ public class UserController {
     }
 
     @Component
-    public class SignUpCompletedListener implements ApplicationListener<SignUpCompletedEvent> {
+    private class SignUpCompletedListener implements ApplicationListener<SignUpCompletedEvent> {
 
         private UserService userService;
         private MessageSource messages;
@@ -149,18 +152,17 @@ public class UserController {
 
         private void confirmRegistration(SignUpCompletedEvent event) {
             User user = event.getUser();
-            String token = UUID.randomUUID().toString();
-            userService.createVerificationToken(user, token);
-
+            VerificationToken verificationToken = verificationTokenService.createVerificationToken(user);
+            String uniqueIdentifier = verificationToken.getToken();
             String recipientAddress = user.getEmail();
             String subject = "Registration Confirmation";
-            String confirmationUrl = event.getAppUrl() + "/confirm-email/" + token;
-            String message = messages.getMessage("registration.message.success", null, event.getLocale());
-
+            String confirmationUrl = event.getAppUrl() + UserRouteRegistry.CONFIRM_EMAIL + "/" + uniqueIdentifier;
+            String[] messageArgs = new String[]{ confirmationUrl, uniqueIdentifier };
+            String message = messages.getMessage("registration.message.success", messageArgs, event.getLocale());
             SimpleMailMessage email = new SimpleMailMessage();
             email.setTo(recipientAddress);
             email.setSubject(subject);
-            email.setText(message + "\n\n" "http://localhost:8080" + confirmationUrl);
+            email.setText(message + "\n\n" + "http://localhost:8080" + confirmationUrl);
             mailSender.send(email);
         }
     }
