@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.MessageSource;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.tucha.passpass.model.User;
-import ua.tucha.passpass.model.VerificationToken;
 import ua.tucha.passpass.service.UserService;
 import ua.tucha.passpass.service.VerificationTokenService;
 import ua.tucha.passpass.service.exception.EmailNotUniqueException;
@@ -69,7 +65,7 @@ public class UserController {
 //            @ModelAttribute("user") User user, BindingResult result
             Model model
     ) {
-        if(!model.containsAttribute("user")) {
+        if (!model.containsAttribute("user")) {
             model.addAttribute("user", getUser());
         }
         return viewSelector.selectView(UserRouteRegistry.SIGN_UP);
@@ -84,7 +80,7 @@ public class UserController {
         String nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.SIGN_UP);
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
         redirectAttributes.addFlashAttribute("user", user);
-        if(!result.hasErrors()) {
+        if (!result.hasErrors()) {
             User userRegistered;
             try {
                 userRegistered = userService.createUser(user);
@@ -104,7 +100,7 @@ public class UserController {
                                 request.getContextPath()
                         )
                 );
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -131,39 +127,21 @@ public class UserController {
     private class SignUpCompletedListener implements ApplicationListener<SignUpCompletedEvent> {
 
         private UserService userService;
-        private MessageSource messages;
-        private JavaMailSender mailSender;
 
         @Autowired
-        public SignUpCompletedListener(
-                UserService userService,
-                MessageSource messages,
-                JavaMailSender mailSender
-        ) {
+        public SignUpCompletedListener(UserService userService) {
             this.userService = userService;
-            this.messages = messages;
-            this.mailSender = mailSender;
         }
 
         @Override
         public void onApplicationEvent(SignUpCompletedEvent event) {
-            this.confirmRegistration(event);
+            this.verifyEmail(event);
         }
 
-        private void confirmRegistration(SignUpCompletedEvent event) {
+        private void verifyEmail(SignUpCompletedEvent event) {
             User user = event.getUser();
-            VerificationToken verificationToken = verificationTokenService.createVerificationToken(user);
-            String uniqueIdentifier = verificationToken.getToken();
-            String recipientAddress = user.getEmail();
-            String subject = "Registration Confirmation";
-            String confirmationUrl = event.getAppUrl() + UserRouteRegistry.CONFIRM_EMAIL + "/" + uniqueIdentifier;
-            String[] messageArgs = new String[]{ confirmationUrl, uniqueIdentifier };
-            String message = messages.getMessage("registration.message.success", messageArgs, event.getLocale());
-            SimpleMailMessage email = new SimpleMailMessage();
-            email.setTo(recipientAddress);
-            email.setSubject(subject);
-            email.setText(message + "\n\n" + "http://localhost:8080" + confirmationUrl);
-            mailSender.send(email);
+            Locale locale = event.getLocale();
+            verificationTokenService.sendVerificationToken(user, null, locale);
         }
     }
 

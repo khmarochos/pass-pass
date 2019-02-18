@@ -34,7 +34,6 @@ public class UserService {
         }
         Date currentDate = new Date();
         user.setCreated(currentDate);
-        user.setEmail_hash("13");
         user.setEnabled(false);
         userRepository.save(user);
         return user;
