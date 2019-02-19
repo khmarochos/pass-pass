@@ -3,4 +3,5 @@
     <logger name="ua.tucha.passpass" level="TRACE" />
     <logger name="org.springframework" level="INFO" />
     <logger name="org.thymeleaf" level="INFO" />
+    <logger name="org.hibernate" level="INFO" />
 </configuration>

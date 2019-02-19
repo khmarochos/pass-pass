@@ -47,6 +47,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// testImplementation 'org.springframework.security:spring-security-test'
+	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
 	compile group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
 	compile group: 'commons-validator', name: 'commons-validator', version: '1.6'
 	compile group: 'org.jasypt', name: 'jasypt', version: '1.9.2'

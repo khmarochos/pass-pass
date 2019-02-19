@@ -2,6 +2,7 @@ package ua.tucha.passpass.controller;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ua.tucha.passpass.controller.dto.UserDTO;
 import ua.tucha.passpass.model.User;
 import ua.tucha.passpass.service.UserService;
 import ua.tucha.passpass.service.VerificationTokenService;
@@ -31,27 +33,35 @@ import java.util.Locale;
 @RequestMapping(UserRouteRegistry.FIRST_LEVEL + "/*")
 public class UserController {
 
-    @ModelAttribute("user")
-    public User getUser() {
-        return new User();
+    @ModelAttribute("userDTO")
+    public UserDTO getUserDTO() {
+        return new UserDTO();
     }
 
     private final UserService userService;
     private final VerificationTokenService verificationTokenService;
     private final ViewSelector viewSelector;
     private final ApplicationEventPublisher eventPublisher;
+    private final ModelMapper modelMapper;
+
+
 
     @Autowired
     public UserController(
             UserService userService,
             VerificationTokenService verificationTokenService,
             ViewSelector viewSelector,
-            ApplicationEventPublisher eventPublisher) {
+            ApplicationEventPublisher eventPublisher
+    ) {
         this.userService = userService;
         this.verificationTokenService = verificationTokenService;
         this.viewSelector = viewSelector;
         this.eventPublisher = eventPublisher;
+
+        this.modelMapper = new ModelMapper();
     }
+
+
 
     @GetMapping(UserRouteRegistry.CONFIRM_EMAIL)
     public String confirmEmail(
@@ -60,38 +70,49 @@ public class UserController {
         return viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
     }
 
+
+
     @GetMapping(UserRouteRegistry.SIGN_UP)
     public String signUp(
-//            @ModelAttribute("user") User user, BindingResult result
             Model model
     ) {
-        if (!model.containsAttribute("user")) {
-            model.addAttribute("user", getUser());
+        if (!model.containsAttribute("userDTO")) {
+            model.addAttribute("userDTO", getUserDTO());
         }
         return viewSelector.selectView(UserRouteRegistry.SIGN_UP);
     }
 
+
+
     @PostMapping(UserRouteRegistry.SIGN_UP)
     public String signUp(
-            @ModelAttribute("user") @Validated(User.CreateUserGroup.class) User user, BindingResult result,
+            @ModelAttribute("userDTO") @Validated(UserDTO.CreateUserGroup.class) UserDTO userDTO,
+            BindingResult result,
             WebRequest request,
             RedirectAttributes redirectAttributes
     ) {
+
         String nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.SIGN_UP);
-        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
-        redirectAttributes.addFlashAttribute("user", user);
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDTO", result);
+        redirectAttributes.addFlashAttribute("userDTO", userDTO);
+
         if (!result.hasErrors()) {
+
+            User userPrepared = new User();
             User userRegistered;
+            modelMapper.map(userDTO, userPrepared);
+
             try {
-                userRegistered = userService.createUser(user);
+                userRegistered = userService.createUser(userPrepared);
                 nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
             } catch (EmailNotUniqueException e) {
                 result.rejectValue(
                         "email",
-                        "validator.email.exists", new String[]{user.getEmail()},
+                        "validator.email.exists", new String[]{userDTO.getEmail()},
                         "This email address is already registered");
                 return nextStep;
             }
+
             try {
                 eventPublisher.publishEvent(
                         new SignUpCompletedEvent(
@@ -103,35 +124,34 @@ public class UserController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
+
         // These objects are needed in any case
         return nextStep;
     }
 
+
+
     @Getter
     private class SignUpCompletedEvent extends ApplicationEvent {
 
-        private String appUrl;
+        private String appURL;
         private Locale locale;
         private User user;
 
-        private SignUpCompletedEvent(User user, Locale locale, String appUrl) {
+        private SignUpCompletedEvent(User user, Locale locale, String appURL) {
             super(user);
             this.user = user;
             this.locale = locale;
-            this.appUrl = appUrl;
+            this.appURL = appURL;
         }
     }
 
+
+
     @Component
     private class SignUpCompletedListener implements ApplicationListener<SignUpCompletedEvent> {
-
-        private UserService userService;
-
-        @Autowired
-        public SignUpCompletedListener(UserService userService) {
-            this.userService = userService;
-        }
 
         @Override
         public void onApplicationEvent(SignUpCompletedEvent event) {

@@ -4,9 +4,7 @@ package ua.tucha.passpass.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -20,11 +18,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
+// A type for enabling password encryption mechanism
 @TypeDefs
         ({
                 @TypeDef(
@@ -40,31 +41,27 @@ import java.util.Date;
 @Entity
 @Data
 @Builder
-@ToString
-@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
 
-    public interface CreateUserGroup { }
+    // Table fields
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull(groups = {CreateUserGroup.class})
-    @NotEmpty(groups = {CreateUserGroup.class})
+    @NotNull
+    @NotEmpty
     private String name;
 
-    @ValidEmail(groups = {CreateUserGroup.class})
-    @NotNull(groups = {CreateUserGroup.class})
-    @NotEmpty(groups = {CreateUserGroup.class})
+    @ValidEmail
+    @NotNull
     @Column(unique=true)
     private String email;
 
-    @ValidPassword(groups = {CreateUserGroup.class})
-    @NotNull(groups = {CreateUserGroup.class})
-    @NotEmpty(groups = {CreateUserGroup.class})
+    @ValidPassword
+    @NotNull
     @Type(type="encryptedString")
     private String password;
 
@@ -78,9 +75,11 @@ public class User {
     @NotNull
     private boolean policyAccepted;
 
-    @NotNull
-    private boolean enabled;
+    private Date verified;
 
-    //@OneToMany(mappedBy = "user")
-    //private List<VerificationToken> verificationTokenList;
+    // Foreign keys without table fields
+
+    @OneToMany(mappedBy = "user")
+    private List<VerificationToken> verificationTokenList;
+
 }

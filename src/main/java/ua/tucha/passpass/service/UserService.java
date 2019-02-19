@@ -34,14 +34,12 @@ public class UserService {
         }
         Date currentDate = new Date();
         user.setCreated(currentDate);
-        user.setEnabled(false);
         userRepository.save(user);
         return user;
     }
 
     public boolean emailExists(String email) {
-        User user = userRepository.findByEmail(email);
-        return user != null;
+        return userRepository.findByEmail(email) != null;
     }
 
 }

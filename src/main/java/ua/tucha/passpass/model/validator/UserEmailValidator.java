@@ -2,36 +2,30 @@ package ua.tucha.passpass.model.validator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.tucha.passpass.service.UserService;
+import ua.tucha.passpass.util.ApplicationContextProvider;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 @Slf4j
+@Component
 public class UserEmailValidator implements ConstraintValidator<ValidEmail, String> {
 
+    private static UserService userService;
     private final static EmailValidator emailValidator = EmailValidator.getInstance();
-    private final UserService userService;
 
-    @Autowired
-    public UserEmailValidator(UserService userService) {
-        this.userService = userService;
+    @Override
+    public void initialize(ValidEmail constraintAnnotation) {
+        // I would gladly use @Autowired, but have to implement this ugly hack, because
+        // a custom validator called by Hibernate isn't being injected by Spring :-(
+        userService = (UserService) ApplicationContextProvider.getBean(UserService.class);
     }
 
     @Override
-    public void initialize(ValidEmail constraintAnnotation) { }
-
-    @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (!emailValidator.isValid(value)) {
-            return false;
-        } else if(userService.emailExists(value)) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("{validator.email.exists}").addConstraintViolation();
-            return false;
-        }
-        return true;
+        return emailValidator.isValid(value);
     }
 
 }

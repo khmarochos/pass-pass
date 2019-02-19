@@ -16,7 +16,7 @@
 
         <attr sel="#registration_form"
               th:action="@{${T(ua.tucha.passpass.util.RouteRegistry$UserRouteRegistry).SIGN_UP}}"
-              th:object="${user}">
+              th:object="${userDTO}">
 
             <attr sel="#name_field"
                   th:field="*{name}"
