@@ -21,6 +21,9 @@
             <attr sel="#name_field"
                   th:field="*{name}"
                   th:placeholder="#{registration.form.placeholder.name}"/>
+            <attr sel="#name_field_errors"
+                  th:each="error: ${#fields.errors('name')}"
+                  th:text="${error}"/>
 
             <attr sel="#email_field"
                   th:field="*{email}"

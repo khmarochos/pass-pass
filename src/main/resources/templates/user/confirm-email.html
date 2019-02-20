@@ -13,33 +13,76 @@
 </head>
 <body>
 
-    <body class="gray-bg">
+<body class="gray-bg">
 
-    <div class="middle-box text-center loginscreen animated fadeInDown">
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
         <div>
-            <div>
 
-                <h1 class="logo-name">хуй</h1>
+            <h1 class="logo-name">хуй</h1>
+
+        </div>
+
+        <h3 id="please_confirm_email_m1">EMAIL CONFIRMATION</h3>
+        <p id="please_confirm_email_m2">PLEASE, CONFIRM YOUR EMAIL</p>
+
+        <div class="tabs-container">
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a class="nav-link active" data-toggle="tab" href="#enter">ENTER TOKEN</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#resend">RESEND TOKEN</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" id="enter" class="tab-pane active">
+                    <div class="panel-body">
+
+                        <form id="verification_form" class="m-t" role="form" method="POST" action="/404">
+                            <div class="form-group">
+                                <input id="verification_token_field" type="text" class="form-control"
+                                       placeholder="CONFIRMATION CODE" required="">
+                                <div id="verification_token_field_errors" class="invalid-feedback"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary block full-width m-b">CONFIRM</button>
+
+                            <p class="text-muted text-center">
+                                <small id="code_not_received">DIDN'T GET THE CODE?</small>
+                            </p>
+                            <a id="resend_confirmation_code" class="btn btn-sm btn-white btn-block" href="#resend">RESEND
+                                CONFIRMATION
+                                CODE</a>
+                        </form>
+                    </div>
+                </div>
+                <div role="tabpanel" id="resend" class="tab-pane">
+                    <div class="panel-body">
+
+                        <form id="verification_form" class="m-t" role="form" method="POST" action="/404">
+                            <div class="form-group">
+                                <input id="verification_token_field" type="text" class="form-control"
+                                       placeholder="CONFIRMATION CODE" required="">
+                                <div id="verification_token_field_errors" class="invalid-feedback"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary block full-width m-b">CONFIRM</button>
+
+                            <p class="text-muted text-center">
+                                <small id="code_not_received">DIDN'T GET THE CODE?</small>
+                            </p>
+                            <a id="resend_confirmation_code" class="btn btn-sm btn-white btn-block" href="#resend">RESEND
+                                CONFIRMATION
+                                CODE</a>
+                        </form>
+                    </div>
+                </div>
 
             </div>
-            <h3 id="please_confirm_email_m1">EMAIL CONFIRMATION</h3>
-            <p id="please_confirm_email_m2">PLEASE, CONFIRM YOUR EMAIL</p>
-            <form id="email_confirmation_form" class="m-t" role="form" method="POST" action="/404">
-                <div class="form-group">
-                    <input id="confirmation_code_field" type="text" class="form-control" placeholder="CONFIRMATION CODE" required="">
-                </div>
-                <button type="submit" class="btn btn-primary block full-width m-b">CONFIRM</button>
 
-                <p class="text-muted text-center"><small id="code_not_received">DIDN'T GET THE CODE?</small></p>
-                <a id="resend_confirmation_code" class="btn btn-sm btn-white btn-block" href="/404">RESEND CONFIRMATION CODE</a>
-            </form>
         </div>
-        <footer>Made by Tucha.UA</footer>
     </div>
+    <footer>Made by Tucha.UA</footer>
+</div>
 
-    <script src="/static/js/jquery-3.1.1.min.js"></script>
-    <script src="/static/js/popper.min.js"></script>
-    <script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/jquery-3.1.1.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.js"></script>
 
 </body>
 </html>

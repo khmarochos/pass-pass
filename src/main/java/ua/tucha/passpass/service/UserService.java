@@ -38,6 +38,10 @@ public class UserService {
         return user;
     }
 
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
+
     public boolean emailExists(String email) {
         return userRepository.findByEmail(email) != null;
     }

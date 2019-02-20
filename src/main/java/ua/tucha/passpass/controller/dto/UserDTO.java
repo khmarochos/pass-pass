@@ -10,20 +10,20 @@ import javax.validation.constraints.NotNull;
 @Data
 public class UserDTO {
 
-    public interface CreateUserGroup { }
+    public interface CreateUserValidaionGroup { }
 
-    @NotNull(groups = {CreateUserGroup.class})
-    @NotEmpty(groups = {CreateUserGroup.class})
+    @NotNull(groups = {CreateUserValidaionGroup.class})
+    @NotEmpty(groups = {CreateUserValidaionGroup.class})
     private String name;
 
-    @NotNull(groups = {CreateUserGroup.class})
-    @ValidEmail(groups = {CreateUserGroup.class})
+    @NotNull(groups = {CreateUserValidaionGroup.class})
+    @ValidEmail(groups = {CreateUserValidaionGroup.class})
     private String email;
 
-    @NotNull(groups = {CreateUserGroup.class})
-    @ValidPassword(groups = {CreateUserGroup.class})
+    @NotNull(groups = {CreateUserValidaionGroup.class})
+    @ValidPassword(groups = {CreateUserValidaionGroup.class})
     private String password;
 
-    @NotNull(groups = {CreateUserGroup.class})
+    @NotNull(groups = {CreateUserValidaionGroup.class})
     private boolean policyAccepted;
 }

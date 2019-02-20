@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -80,6 +81,7 @@ public class User {
     // Foreign keys without table fields
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private List<VerificationToken> verificationTokenList;
 
 }

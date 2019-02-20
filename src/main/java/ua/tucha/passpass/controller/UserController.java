@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.tucha.passpass.controller.dto.UserDTO;
+import ua.tucha.passpass.controller.dto.VerificationTokenDTO;
 import ua.tucha.passpass.model.User;
 import ua.tucha.passpass.service.UserService;
 import ua.tucha.passpass.service.VerificationTokenService;
@@ -38,9 +39,12 @@ public class UserController {
         return new UserDTO();
     }
 
+    @ModelAttribute("verificationTokenDTO")
+    public VerificationTokenDTO getVerificationTokenDTO() { return new VerificationTokenDTO(); }
+
+    private final ViewSelector viewSelector;
     private final UserService userService;
     private final VerificationTokenService verificationTokenService;
-    private final ViewSelector viewSelector;
     private final ApplicationEventPublisher eventPublisher;
     private final ModelMapper modelMapper;
 
@@ -48,26 +52,17 @@ public class UserController {
 
     @Autowired
     public UserController(
+            ViewSelector viewSelector,
             UserService userService,
             VerificationTokenService verificationTokenService,
-            ViewSelector viewSelector,
             ApplicationEventPublisher eventPublisher
     ) {
+        this.viewSelector = viewSelector;
         this.userService = userService;
         this.verificationTokenService = verificationTokenService;
-        this.viewSelector = viewSelector;
         this.eventPublisher = eventPublisher;
 
         this.modelMapper = new ModelMapper();
-    }
-
-
-
-    @GetMapping(UserRouteRegistry.CONFIRM_EMAIL)
-    public String confirmEmail(
-            Model model
-    ) {
-        return viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
     }
 
 
@@ -86,7 +81,7 @@ public class UserController {
 
     @PostMapping(UserRouteRegistry.SIGN_UP)
     public String signUp(
-            @ModelAttribute("userDTO") @Validated(UserDTO.CreateUserGroup.class) UserDTO userDTO,
+            @ModelAttribute("userDTO") @Validated(UserDTO.CreateUserValidaionGroup.class) UserDTO userDTO,
             BindingResult result,
             WebRequest request,
             RedirectAttributes redirectAttributes
@@ -128,6 +123,49 @@ public class UserController {
         }
 
         // These objects are needed in any case
+        return nextStep;
+    }
+
+
+
+    @GetMapping(UserRouteRegistry.CONFIRM_EMAIL)
+    public String confirmEmail(
+            Model model
+    ) {
+        return viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
+    }
+
+
+
+    @PostMapping(UserRouteRegistry.CONFIRM_EMAIL)
+    public String confirmEmail(
+            @ModelAttribute("verificationTokenDTO") @Validated VerificationTokenDTO verificationTokenDTO,
+            BindingResult result,
+            WebRequest request,
+            RedirectAttributes redirectAttributes) {
+
+        String nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.verificationTokenDTO", result);
+        redirectAttributes.addFlashAttribute("verificationTokenDTO", verificationTokenDTO);
+
+        if (!result.hasErrors()) {
+
+            boolean verificationTokenApplied =
+                    verificationTokenService.applyVerificationToken(verificationTokenDTO.getVerificationToken());
+
+            if(verificationTokenApplied) {
+                verificationTokenDTO.setTokenApplied(true);
+                nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
+            }
+
+            // TODO: add the corresponding entry to message.properties
+            result.rejectValue(
+                    "verificationToken",
+                    "confirm_email.verification_token_invalid",
+                    "The verification code is no longer valid");
+
+        }
+
         return nextStep;
     }
 
