@@ -31,18 +31,19 @@ allprojects {
 	repositories {
 		mavenCentral()
 		flatDir {
-			dir rootProject.file( 'libs' )
+			dir rootProject.file( 'lib' )
 		}
 	}
 }
 
 dependencies {
+	
+	// Internal dependencies
 	compile project(':core')
 	compile project(':web')
-
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	
+	// Spring is coming
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.session:spring-session-core'
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
