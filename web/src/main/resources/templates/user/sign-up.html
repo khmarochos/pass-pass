@@ -13,58 +13,62 @@
 </head>
 <body>
 
-    <body class="gray-bg">
+<body class="gray-bg">
 
-    <div class="middle-box text-center loginscreen animated fadeInDown">
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
         <div>
-            <div>
-
-                <h1 class="logo-name">хуй</h1>
-
-            </div>
-            <h3 id="please_register_m1">USER REGISTRATION</h3>
-            <p id="please_register_m2">PLEASE, SIGN UP TO SEE IT IN ACTION</p>
-            <form id="registration_form" class="m-t" role="form" method="POST" action="/404">
-                <div class="form-group">
-                    <input id="name_field" type="text" class="form-control" placeholder="FULL NAME" required="">
-                </div>
-                <div class="form-group">
-                    <input id="email_field" type="email" class="form-control" placeholder="EMAIL" required="">
-                    <div id="email_field_errors" class="invalid-feedback"></div>
-                </div>
-                <div class="form-group">
-                    <input id="password_field" type="password" class="form-control" placeholder="PASSWORD" required="">
-                    <div id="password_field_errors" class="invalid-feedback"></div>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox i-checks">
-                        <label>
-                            <input type="checkbox" id="policy_acceptance_checkbox" value="true">&nbsp;<span id="policy_acceptance">I AGREE THE TERMS AND POLICY</span>
-                        </label>
-                    </div>
-                    <div id="policy_acceptance_checkbox_errors" class="invalid-feedback"></div>
-                </div>
-                <button type="submit" class="btn btn-primary block full-width m-b">REGISTER</button>
-
-                <p class="text-muted text-center"><small id="already_registered">ALREADY REGISTERED?</small></p>
-                <a id="login" class="btn btn-sm btn-white btn-block" href="/404">SIGN IN</a>
-            </form>
+            <h1 class="logo-name">хуй</h1>
         </div>
-        <footer>Made by Tucha.UA</footer>
-    </div>
 
-    <script src="/static/js/jquery-3.1.1.min.js"></script>
-    <script src="/static/js/popper.min.js"></script>
-    <script src="/static/js/bootstrap.js"></script>
-    <script src="/static/js/plugins/iCheck/icheck.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
+        <h3 id="please_register_m1">USER REGISTRATION</h3>
+        <p id="please_register_m2">PLEASE, SIGN UP TO SEE IT IN ACTION</p>
+
+        <form id="registration_form" class="m-t" role="form" method="POST" action="/404">
+            <div class="form-group">
+                <input id="name_field" type="text" class="form-control" placeholder="FULL NAME" required="">
+            </div>
+            <div class="form-group">
+                <input id="email_field" type="email" class="form-control" placeholder="EMAIL" required="">
+                <div id="email_field_errors" class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <input id="password_field" type="password" class="form-control" placeholder="PASSWORD" required="">
+                <div id="password_field_errors" class="invalid-feedback"></div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox i-checks">
+                    <label>
+                        <input type="checkbox" id="policy_acceptance_checkbox" value="true">&nbsp;<span
+                            id="policy_acceptance">I AGREE THE TERMS AND POLICY</span>
+                    </label>
+                </div>
+                <div id="policy_acceptance_checkbox_errors" class="invalid-feedback"></div>
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b">REGISTER</button>
+
+            <p class="text-muted text-center">
+                <small id="already_registered">ALREADY REGISTERED?</small>
+            </p>
+            <a id="go_sign_in" class="btn btn-sm btn-white btn-block" href="/404">SIGN IN</a>
+        </form>
+
+    </div>
+    <footer>Made by Tucha.UA</footer>
+</div>
+
+<script src="/static/js/jquery-3.1.1.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/plugins/iCheck/icheck.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
         });
-    </script>
+    });
+</script>
 
 </body>
 </html>

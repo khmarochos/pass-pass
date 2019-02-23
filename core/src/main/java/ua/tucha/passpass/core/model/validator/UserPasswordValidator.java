@@ -23,7 +23,7 @@ public class UserPasswordValidator implements ConstraintValidator<ValidPassword,
 
     private class MessageResolverProxy implements MessageResolver {
         private final PropertiesMessageResolver messageResolver = new PropertiesMessageResolver();
-        private static final String MESSAGE_LABEL_PREFIX = "validator.password.";
+        private static final String MESSAGE_LABEL_PREFIX = "core.model.validator.PasswordValidator.password_";
         @Override
         public String resolve(@NotNull RuleResultDetail detail) {
             String errorCode

@@ -90,6 +90,22 @@ public class UserService {
 
 
 
+    public User findUserByVerificationToken(VerificationToken verificationToken) {
+        return verificationToken.getUser();
+    }
+
+    public User findUserByVerificationToken(String verificationTokenString) {
+        User user = null;
+        VerificationToken verificationToken =
+                verificationTokenService.findVerificationTokenByToken(verificationTokenString);
+        if(verificationToken != null) {
+            user = findUserByVerificationToken(verificationToken);
+        }
+        return user;
+    }
+
+
+
     private boolean emailExists(String email) {
         return userRepository.findByEmail(email) != null;
     }

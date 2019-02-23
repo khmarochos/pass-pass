@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = UserPasswordValidator.class)
 @Documented
 public @interface ValidPassword {
-    String message() default "{validator.password.invalid}";
+    String message() default "{core.model.validator.PasswordValidator.password_invalid}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

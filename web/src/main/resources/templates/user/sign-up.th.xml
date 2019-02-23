@@ -9,10 +9,10 @@
               th:text="#{registration.title}"/>
 
         <attr sel="#please_register_m1"
-              th:text="#{registration.please_register_m1}"/>
+              th:text="#{web.resources.templates.user.sign-up.please_register_m2}"/>
 
         <attr sel="#please_register_m2"
-              th:text="#{registration.please_register_m2}"/>
+              th:text="#{web.resources.templates.user.sign-up.please_register_m2}"/>
 
         <attr sel="#registration_form"
               th:action="@{${T(ua.tucha.passpass.web.util.RouteRegistry$UserRouteRegistry).SIGN_UP}}"
@@ -20,14 +20,14 @@
 
             <attr sel="#name_field"
                   th:field="*{name}"
-                  th:placeholder="#{registration.form.placeholder.name}"/>
+                  th:placeholder="#{web.resources.templates.user.sign-up.form.placeholder.name}"/>
             <attr sel="#name_field_errors"
                   th:each="error: ${#fields.errors('name')}"
                   th:text="${error}"/>
 
             <attr sel="#email_field"
                   th:field="*{email}"
-                  th:placeholder="#{registration.form.placeholder.email}"
+                  th:placeholder="#{web.resources.templates.user.sign-up.form.placeholder.email}"
                   th:errorclass="is-invalid" />
             <attr sel="#email_field_errors"
                   th:each="error: ${#fields.errors('email')}"
@@ -35,7 +35,7 @@
 
             <attr sel="#password_field"
                   th:field="*{password}"
-                  th:placeholder="#{registration.form.placeholder.password}"
+                  th:placeholder="#{web.resources.templates.user.sign-up.form.placeholder.password}"
                   th:errorclass="is-invalid" />
             <attr sel="#password_field_errors"
                   th:each="error: ${#fields.errors('password')}"
@@ -47,16 +47,16 @@
                   th:each="error: ${#fields.errors('policyAccepted')}"
                   th:text="${error}"/>
             <attr sel="#policy_acceptance"
-                  th:text="#{registration.form.policy_acceptance}"/>
+                  th:text="#{web.resources.templates.user.sign-up.form.policy_acceptance}"/>
 
             <attr sel="button"
-                  th:text="#{registration.form.submit}"/>
+                  th:text="#{web.resources.templates.user.sign-up.form.submit}"/>
 
             <attr sel="#already_registered"
-                  th:text="#{registration.form.alredy_registered}"/>
+                  th:text="#{web.resources.templates.user.sign-up.form.alredy_registered}"/>
 
-            <attr sel="#login"
-                  th:text="#{registration.form.login}"/>
+            <attr sel="#go_sign_in"
+                  th:text="#{web.resources.templates.user.sign-up.form.go_sign_in}"/>
 
         </attr>
 

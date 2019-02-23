@@ -2,6 +2,7 @@ package ua.tucha.passpass.core.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -31,14 +32,13 @@ public class VerificationTokenService {
     @Autowired
     public VerificationTokenService(
             VerificationTokenRepository verificationTokenRepository,
-            MessageSource messages,
+            @Qualifier("messageSource") MessageSource messages,
             JavaMailSender mailSender
     ) {
         this.verificationTokenRepository = verificationTokenRepository;
         this.messages = messages;
         this.mailSender = mailSender;
     }
-
 
 
     // Here be the constructor methods
@@ -54,20 +54,28 @@ public class VerificationTokenService {
     }
 
 
-
     // Here be public methods
 
-    public void sendVerificationToken(@NotNull User user, VerificationToken verificationToken, @NotNull Locale locale) {
+    public void sendVerificationTokenToConfirmEmail(
+            VerificationToken verificationToken,
+            @NotNull User user,
+            @NotNull String appURL,
+            @NotNull Locale locale
+    ) {
 
-        if (verificationToken == null) verificationToken = createVerificationToken(user);
-        // TODO: resolve the cross-dependency
+        String tokenString =
+                verificationToken.getToken();
         // String confirmationURL = RouteRegistry.UserRouteRegistry.CONFIRM_EMAIL + "/" + verificationToken.getToken();
-        String confirmationURL = "..." + verificationToken.getToken();
-        String token = verificationToken.getToken();
-        String[] messageArgs = new String[]{confirmationURL, token};
-        String messageRecipient = user.getEmail();
-        String messageSubject = messages.getMessage("registration.verification.message.subject", null, locale);
-        String messageBody = messages.getMessage("registration.verification.message.body", messageArgs, locale);
+        String confirmationURL =
+                appURL + "/" + tokenString;
+        String[] messageArgs =
+                new String[]{confirmationURL, tokenString};
+        String messageRecipient =
+                user.getEmail();
+        String messageSubject =
+                messages.getMessage("core.service.VerificationTokenService.message.subject", null, locale);
+        String messageBody =
+                messages.getMessage("core.service.VerificationTokenService.message.body", messageArgs, locale);
         ;
         // TODO: use Thymeleaf!
 
@@ -78,23 +86,25 @@ public class VerificationTokenService {
         mailSender.send(email);
     }
 
-    public void sendVerificationToken(@NotNull User user, @NotNull Locale locale) {
-        sendVerificationToken(user, null, locale);
+    public void sendVerificationTokenToConfirmEmail(
+            @NotNull User user,
+            @NotNull String appURL,
+            @NotNull Locale locale
+    ) {
+        VerificationToken verificationToken = createVerificationToken(user);
+        sendVerificationTokenToConfirmEmail(verificationToken, user, appURL, locale);
     }
 
 
-
     boolean checkVerificationToken(@NotNull VerificationToken verificationToken) {
-        Date currentDate = currentDate();
         Date expiry = verificationToken.getExpiry();
-        return expiry != null && currentDate.before(expiry);
+        return expiry != null && currentDate().before(expiry);
     }
 
     boolean checkVerificationToken(@NotNull String verificationTokenString) {
         VerificationToken verificationToken = findVerificationTokenByToken(verificationTokenString);
-        return (verificationToken != null) && checkVerificationToken(verificationToken);
+        return verificationToken != null && checkVerificationToken(verificationToken);
     }
-
 
 
     boolean applyVerificationToken(
@@ -136,7 +146,6 @@ public class VerificationTokenService {
         }
         return applyVerificationToken(verificationToken, expireToken, raiseException);
     }
-
 
 
     // Here be private methods

@@ -4,14 +4,14 @@
         <attr sel="footer"
               th:replace="~{_snippets/footer :: footer}"/>
         <attr sel="#title"
-              th:text="${failure.title}"/>
+              th:text="${web.resources.templates.failure.title}"/>
         <attr sel="failure_code"
-              th:text="${failure.code}"/>
+              th:text="${web.resources.templates.failure.code}"/>
         <attr sel="#failure_name"
-              th:text="${failure.getName()}"/>
+              th:text="${web.resources.templates.failure.getName()}"/>
         <attr sel="#failure_description"
-              th:text="${failure.description}"/>
+              th:text="${web.resources.templates.failure.description}"/>
         <attr sel="#href_index"
-              th:text="#{failure.go_to_index}"/>
+              th:text="#{web.resources.templates.failure.go_home}"/>
     </thlogic>
 </html>

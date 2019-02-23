@@ -102,9 +102,11 @@ public class UserController {
                 userRegistered = userService.createUser(userPrepared);
                 nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
             } catch (EmailNotUniqueException e) {
+                // Actually I don't like that this message won't be sent if the DTO validation fails,
+                // will definitely implement an additional check sometimes (TODO)
                 result.rejectValue(
                         "email",
-                        "validator.email.exists", new String[]{userDTO.getEmail()},
+                        "core.model.validator.EmailValidator.email_exists", new String[]{userDTO.getEmail()},
                         "This email address is already registered");
                 return nextStep;
             }
@@ -154,13 +156,13 @@ public class UserController {
                 // TODO: add the corresponding entry to message.properties
                 result.rejectValue(
                         "verificationToken",
-                        "confirm_email.verification_token_invalid",
+                        "web.controller.UserController.verification_token_invalid",
                         "The verification code is no longer valid");
             } catch (VerificationTokenNotFoundException e) {
                 // TODO: add the corresponding entry to message.properties
                 result.rejectValue(
                         "verificationToken",
-                        "confirm_email.verification_token_not_found",
+                        "web.controller.UserController.verification_token_not_found",
                         "The verification code does not exist");
             }
         }
@@ -195,8 +197,9 @@ public class UserController {
 
         private void verifyEmail(SignUpCompletedEvent event) {
             User user = event.getUser();
+            String appURL = event.getAppURL();
             Locale locale = event.getLocale();
-            verificationTokenService.sendVerificationToken(user, null, locale);
+            verificationTokenService.sendVerificationTokenToConfirmEmail(user, appURL, locale);
         }
     }
 

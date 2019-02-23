@@ -32,7 +32,6 @@ public class ViewSelector {
                 String route = (String) field.get(null);
                 routeView.put(route, route);
             }
-            log.debug(">>> {}", this.getClass().getName());
             // Java regexps in a literal string look wretched... :-\\
             Pattern p = Pattern.compile("^"
                     + ROUTE_REGISTRY_CLASS_NAME.replace(".", "\\.")

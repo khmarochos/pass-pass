@@ -6,7 +6,7 @@
                 th:replace="~{_snippets/footer :: footer}" />
 
         <attr sel="#title"
-              th:text="#{confirm_email.title}"/>
+              th:text="#{web.resources.templates.user.confirm-email.title}"/>
 
         <attr sel="#verification_form"
               th:action="@{${T(ua.tucha.passpass.web.util.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL}}"
@@ -14,7 +14,7 @@
 
             <attr sel="#verification_token_field"
                   th:field="*{verificationToken}"
-                  th:placeholder="#{confirm_email.form.placeholder.token}"
+                  th:placeholder="#{web.resources.templates.user.confirm-email.form.placeholder.token}"
                   th:errorclass="is-invalid" />
             <attr sel="#verification_token_field_errors"
                   th:each="error: ${#fields.errors('verificationToken')}"
