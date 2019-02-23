@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredException;
+import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
 import ua.tucha.passpass.web.model.DTO.UserDTO;
 import ua.tucha.passpass.web.model.DTO.VerificationTokenDTO;
 import ua.tucha.passpass.core.model.User;
@@ -40,14 +42,15 @@ public class UserController {
     }
 
     @ModelAttribute("verificationTokenDTO")
-    public VerificationTokenDTO getVerificationTokenDTO() { return new VerificationTokenDTO(); }
+    public VerificationTokenDTO getVerificationTokenDTO() {
+        return new VerificationTokenDTO();
+    }
 
     private final ViewSelector viewSelector;
     private final UserService userService;
     private final VerificationTokenService verificationTokenService;
     private final ApplicationEventPublisher eventPublisher;
     private final ModelMapper modelMapper;
-
 
 
     @Autowired
@@ -66,7 +69,6 @@ public class UserController {
     }
 
 
-
     @GetMapping(UserRouteRegistry.SIGN_UP)
     public String signUp(
             Model model
@@ -76,7 +78,6 @@ public class UserController {
         }
         return viewSelector.selectView(UserRouteRegistry.SIGN_UP);
     }
-
 
 
     @PostMapping(UserRouteRegistry.SIGN_UP)
@@ -127,14 +128,12 @@ public class UserController {
     }
 
 
-
     @GetMapping(UserRouteRegistry.CONFIRM_EMAIL)
     public String confirmEmail(
             Model model
     ) {
         return viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
     }
-
 
 
     @PostMapping(UserRouteRegistry.CONFIRM_EMAIL)
@@ -144,31 +143,30 @@ public class UserController {
             WebRequest request,
             RedirectAttributes redirectAttributes) {
 
-        String nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.verificationTokenDTO", result);
         redirectAttributes.addFlashAttribute("verificationTokenDTO", verificationTokenDTO);
 
         if (!result.hasErrors()) {
-
-            boolean verificationTokenApplied =
-                    verificationTokenService.applyVerificationToken(verificationTokenDTO.getVerificationToken());
-
-            if(verificationTokenApplied) {
+            try {
+                userService.verifyEmailByToken(verificationTokenDTO.getVerificationToken());
                 verificationTokenDTO.setTokenApplied(true);
-                nextStep = "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
+            } catch (VerificationTokenExpiredException e) {
+                // TODO: add the corresponding entry to message.properties
+                result.rejectValue(
+                        "verificationToken",
+                        "confirm_email.verification_token_invalid",
+                        "The verification code is no longer valid");
+            } catch (VerificationTokenNotFoundException e) {
+                // TODO: add the corresponding entry to message.properties
+                result.rejectValue(
+                        "verificationToken",
+                        "confirm_email.verification_token_not_found",
+                        "The verification code does not exist");
             }
-
-            // TODO: add the corresponding entry to message.properties
-            result.rejectValue(
-                    "verificationToken",
-                    "confirm_email.verification_token_invalid",
-                    "The verification code is no longer valid");
-
         }
 
-        return nextStep;
+        return "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
     }
-
 
 
     @Getter
@@ -185,7 +183,6 @@ public class UserController {
             this.appURL = appURL;
         }
     }
-
 
 
     @Component

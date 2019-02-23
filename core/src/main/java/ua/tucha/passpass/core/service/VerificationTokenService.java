@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import ua.tucha.passpass.core.model.User;
 import ua.tucha.passpass.core.model.VerificationToken;
 import ua.tucha.passpass.core.repository.VerificationTokenRepository;
+import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredException;
+import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
@@ -21,7 +23,6 @@ import java.util.UUID;
 public class VerificationTokenService {
 
     private final VerificationTokenRepository verificationTokenRepository;
-    private final UserService userService;
     private final MessageSource messages;
     private final JavaMailSender mailSender;
 
@@ -30,15 +31,15 @@ public class VerificationTokenService {
     @Autowired
     public VerificationTokenService(
             VerificationTokenRepository verificationTokenRepository,
-            UserService userService,
             MessageSource messages,
             JavaMailSender mailSender
     ) {
         this.verificationTokenRepository = verificationTokenRepository;
-        this.userService = userService;
         this.messages = messages;
         this.mailSender = mailSender;
     }
+
+
 
     // Here be the constructor methods
 
@@ -52,19 +53,22 @@ public class VerificationTokenService {
         return verificationToken;
     }
 
+
+
     // Here be public methods
 
     public void sendVerificationToken(@NotNull User user, VerificationToken verificationToken, @NotNull Locale locale) {
 
-        if(verificationToken == null) verificationToken = createVerificationToken(user);
+        if (verificationToken == null) verificationToken = createVerificationToken(user);
         // TODO: resolve the cross-dependency
         // String confirmationURL = RouteRegistry.UserRouteRegistry.CONFIRM_EMAIL + "/" + verificationToken.getToken();
         String confirmationURL = "..." + verificationToken.getToken();
         String token = verificationToken.getToken();
-        String[] messageArgs = new String[]{ confirmationURL, token };
+        String[] messageArgs = new String[]{confirmationURL, token};
         String messageRecipient = user.getEmail();
         String messageSubject = messages.getMessage("registration.verification.message.subject", null, locale);
-        String messageBody = messages.getMessage("registration.verification.message.body", messageArgs, locale);;
+        String messageBody = messages.getMessage("registration.verification.message.body", messageArgs, locale);
+        ;
         // TODO: use Thymeleaf!
 
         SimpleMailMessage email = new SimpleMailMessage();
@@ -78,37 +82,66 @@ public class VerificationTokenService {
         sendVerificationToken(user, null, locale);
     }
 
-    public boolean checkVerificationToken(@NotNull VerificationToken verificationToken) {
+
+
+    boolean checkVerificationToken(@NotNull VerificationToken verificationToken) {
         Date currentDate = currentDate();
         Date expiry = verificationToken.getExpiry();
-        User user = verificationToken.getUser();
-        return
-                expiry != null && currentDate.before(expiry) &&
-                user != null && user.getVerified() == null;
+        return expiry != null && currentDate.before(expiry);
     }
 
-    public boolean checkVerificationToken(@NotNull String verificationTokenString) {
+    boolean checkVerificationToken(@NotNull String verificationTokenString) {
         VerificationToken verificationToken = findVerificationTokenByToken(verificationTokenString);
         return (verificationToken != null) && checkVerificationToken(verificationToken);
     }
 
-    public boolean applyVerificationToken(@NotNull VerificationToken verificationToken) {
-        if(!checkVerificationToken(verificationToken)) { return false; }
-        Date currentDate = currentDate();
-        User user = verificationToken.getUser();
-        user.setVerified(currentDate);
-        userService.updateUser(user);
+
+
+    boolean applyVerificationToken(
+            @NotNull VerificationToken verificationToken,
+            boolean expireToken,
+            boolean raiseException
+    ) throws VerificationTokenExpiredException {
+        // Checking the token
+        if (!checkVerificationToken(verificationToken)) {
+            if (raiseException) {
+                throw new VerificationTokenExpiredException("Verification token "
+                        + verificationToken.getToken()
+                        + " is expired"
+                );
+            } else {
+                return false;
+            }
+        }
+        // Disabling the token if needed
+        if (expireToken) {
+            verificationToken.setExpiry(currentDate());
+            verificationTokenRepository.save(verificationToken);
+        }
         return true;
     }
 
-    public boolean applyVerificationToken(@NotNull String verificationTokenString) {
+    public boolean applyVerificationToken(
+            @NotNull String verificationTokenString,
+            boolean expireToken,
+            boolean raiseException
+    ) throws VerificationTokenNotFoundException, VerificationTokenExpiredException {
         VerificationToken verificationToken = findVerificationTokenByToken(verificationTokenString);
-        return (verificationToken != null) && applyVerificationToken(verificationToken);
+        if (verificationToken == null) {
+            if (raiseException) {
+                throw new VerificationTokenNotFoundException("No such verification token: " + verificationTokenString);
+            } else {
+                return false;
+            }
+        }
+        return applyVerificationToken(verificationToken, expireToken, raiseException);
     }
+
+
 
     // Here be private methods
 
-    private VerificationToken findVerificationTokenByToken(@NotNull String verificationToken) {
+    VerificationToken findVerificationTokenByToken(@NotNull String verificationToken) {
         return verificationTokenRepository.findByToken(verificationToken);
     }
 

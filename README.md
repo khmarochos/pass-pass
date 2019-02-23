@@ -14,3 +14,19 @@ What is done at the moment
 1. User sign-up mechanism with validation.
 2. User email verification by a token being sent.
 
+Technologies and frameworks used
+--------------------------------
+* Java,
+* Spring Boot,
+* Spring MVC,
+* Hibernate,
+* MySQL,
+* Lombok,
+* Thymeleaf,
+* Bootstrap,
+* IntelliJ IDEA,
+* zaloopa, huypizda and sukablyat!
+
+Note
+----
+This is my very first project with Java and Spring. Please, don't judge too hard. :-)
