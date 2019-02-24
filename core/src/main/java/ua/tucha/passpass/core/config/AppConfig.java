@@ -5,17 +5,15 @@ import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.hibernate5.encryptor.HibernatePBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.PropertyResolver;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Slf4j
-@SpringBootConfiguration
+@Configuration
 @ComponentScan(basePackages = "ua.tucha.passpass.core")
 @PropertySource(value = { "classpath:application.properties" })
 public class AppConfig {
@@ -25,16 +23,6 @@ public class AppConfig {
     @Autowired
     public AppConfig(PropertyResolver environment) {
         this.environment = environment;
-    }
-
-    @Bean
-    public LocalValidatorFactoryBean getValidator() {
-        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        bean.setValidationMessageSource(messageSource);
-        return bean;
     }
 
     @Bean
