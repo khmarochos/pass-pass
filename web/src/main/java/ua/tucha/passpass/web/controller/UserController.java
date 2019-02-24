@@ -18,14 +18,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredException;
-import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
-import ua.tucha.passpass.web.model.DTO.UserDTO;
-import ua.tucha.passpass.web.model.DTO.VerificationTokenDTO;
 import ua.tucha.passpass.core.model.User;
 import ua.tucha.passpass.core.service.UserService;
 import ua.tucha.passpass.core.service.VerificationTokenService;
 import ua.tucha.passpass.core.service.exception.EmailNotUniqueException;
+import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredException;
+import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
+import ua.tucha.passpass.web.model.DTO.EmailDTO;
+import ua.tucha.passpass.web.model.DTO.UserDTO;
+import ua.tucha.passpass.web.model.DTO.VerificationTokenDTO;
 import ua.tucha.passpass.web.util.RouteRegistry.UserRouteRegistry;
 import ua.tucha.passpass.web.util.ViewSelector;
 
@@ -33,7 +34,10 @@ import java.util.Locale;
 
 @Slf4j
 @Controller
-@RequestMapping(UserRouteRegistry.FIRST_LEVEL + "/*")
+@RequestMapping(path = {
+        UserRouteRegistry.FIRST_LEVEL + "/*",
+        UserRouteRegistry.FIRST_LEVEL + "/*/*"
+})
 public class UserController {
 
     @ModelAttribute("userDTO")
@@ -46,11 +50,19 @@ public class UserController {
         return new VerificationTokenDTO();
     }
 
+    @ModelAttribute("emailDTO")
+    public EmailDTO getEmailDTO() {
+        return new EmailDTO();
+    }
+
     private final ViewSelector viewSelector;
     private final UserService userService;
     private final VerificationTokenService verificationTokenService;
     private final ApplicationEventPublisher eventPublisher;
     private final ModelMapper modelMapper;
+
+    public static final String ACTION_APPLY_TOKEN = "apply-token";
+    public static final String ACTION_ORDER_TOKEN = "order-token";
 
 
     @Autowired
@@ -134,6 +146,7 @@ public class UserController {
     public String confirmEmail(
             Model model
     ) {
+        model.addAttribute("action", ACTION_APPLY_TOKEN);
         return viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
     }
 
@@ -141,26 +154,27 @@ public class UserController {
     @PostMapping(UserRouteRegistry.CONFIRM_EMAIL)
     public String confirmEmail(
             @ModelAttribute("verificationTokenDTO") @Validated VerificationTokenDTO verificationTokenDTO,
-            BindingResult result,
+            BindingResult verificationTokenDTOResult,
             WebRequest request,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes
+    ) {
 
-        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.verificationTokenDTO", result);
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.verificationTokenDTO", verificationTokenDTOResult);
         redirectAttributes.addFlashAttribute("verificationTokenDTO", verificationTokenDTO);
 
-        if (!result.hasErrors()) {
+        if (!verificationTokenDTOResult.hasErrors()) {
             try {
                 userService.verifyEmailByToken(verificationTokenDTO.getVerificationToken());
                 verificationTokenDTO.setTokenApplied(true);
             } catch (VerificationTokenExpiredException e) {
                 // TODO: add the corresponding entry to message.properties
-                result.rejectValue(
+                verificationTokenDTOResult.rejectValue(
                         "verificationToken",
                         "web.controller.UserController.verification_token_invalid",
                         "The verification code is no longer valid");
             } catch (VerificationTokenNotFoundException e) {
                 // TODO: add the corresponding entry to message.properties
-                result.rejectValue(
+                verificationTokenDTOResult.rejectValue(
                         "verificationToken",
                         "web.controller.UserController.verification_token_not_found",
                         "The verification code does not exist");
@@ -170,6 +184,34 @@ public class UserController {
         return "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
     }
 
+
+    @GetMapping(UserRouteRegistry.CONFIRM_EMAIL + '/' + ACTION_ORDER_TOKEN)
+    public String confirmEmailRetry(Model model) {
+        model.addAttribute("action", ACTION_ORDER_TOKEN);
+        return viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL);
+    }
+
+
+    @PostMapping(UserRouteRegistry.CONFIRM_EMAIL + '/' + ACTION_ORDER_TOKEN)
+    public String confirmEmailRetry(
+            @ModelAttribute("emailDTO") @Validated EmailDTO emailDTO,
+            BindingResult emailDTOResult,
+            WebRequest request,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.emailDTO", emailDTOResult);
+        redirectAttributes.addFlashAttribute("emailDTO", emailDTO);
+
+//        if(!emailDTOResult.hasErrors()) {
+//
+//        }
+
+//        log.debug("emailDTO = {}, emailDTOResult = {}", emailDTO, emailDTOResult);
+
+        return "redirect:" + viewSelector.selectView(UserRouteRegistry.CONFIRM_EMAIL) + '/' + ACTION_ORDER_TOKEN;
+
+    }
 
     @Getter
     private class SignUpCompletedEvent extends ApplicationEvent {

@@ -6,59 +6,60 @@
                 th:replace="~{_snippets/footer :: footer}" />
 
         <attr sel="#title"
-              th:text="#{registration.title}"/>
+              th:text="#{web.resources.templates.user.sign-up.title}"/>
 
-        <attr sel="#please_register_m1"
-              th:text="#{web.resources.templates.user.sign-up.please_register_m2}"/>
+        <attr sel="#heading"
+              th:text="#{web.resources.templates.user.sign-up.heading}"/>
 
-        <attr sel="#please_register_m2"
-              th:text="#{web.resources.templates.user.sign-up.please_register_m2}"/>
+        <attr sel="#call-to-register"
+              th:text="#{web.resources.templates.user.sign-up.call-to-register}"/>
 
-        <attr sel="#registration_form"
+        <attr sel="#form"
               th:action="@{${T(ua.tucha.passpass.web.util.RouteRegistry$UserRouteRegistry).SIGN_UP}}"
               th:object="${userDTO}">
 
-            <attr sel="#name_field"
+            <attr sel="#name-field"
                   th:field="*{name}"
-                  th:placeholder="#{web.resources.templates.user.sign-up.form.placeholder.name}"/>
-            <attr sel="#name_field_errors"
+                  th:placeholder="#{web.resources.templates.user.sign-up.form.name-field.placeholder}"/>
+            <attr sel="#name-field-feedback"
                   th:each="error: ${#fields.errors('name')}"
                   th:text="${error}"/>
 
-            <attr sel="#email_field"
+            <attr sel="#email-field"
                   th:field="*{email}"
-                  th:placeholder="#{web.resources.templates.user.sign-up.form.placeholder.email}"
+                  th:placeholder="#{web.resources.templates.user.sign-up.form.email-field.placeholder}"
                   th:errorclass="is-invalid" />
-            <attr sel="#email_field_errors"
+            <attr sel="#email-field-feedback"
                   th:each="error: ${#fields.errors('email')}"
                   th:text="${error}"/>
 
-            <attr sel="#password_field"
+            <attr sel="#password-field"
                   th:field="*{password}"
-                  th:placeholder="#{web.resources.templates.user.sign-up.form.placeholder.password}"
+                  th:placeholder="#{web.resources.templates.user.sign-up.form.password-field.placeholder}"
                   th:errorclass="is-invalid" />
-            <attr sel="#password_field_errors"
+            <attr sel="#password-field-feedback"
                   th:each="error: ${#fields.errors('password')}"
                   th:text="${error}"/>
 
-            <attr sel="#policy_acceptance_checkbox"
+            <attr sel="#policy-acceptance-checkbox"
                   th:field="*{policyAccepted}"/>
-            <attr sel="#policy_acceptance_checkbox_errors"
+            <attr sel="#policy_acceptance-checkbox-feedback"
                   th:each="error: ${#fields.errors('policyAccepted')}"
                   th:text="${error}"/>
-            <attr sel="#policy_acceptance"
-                  th:text="#{web.resources.templates.user.sign-up.form.policy_acceptance}"/>
+            <attr sel="#policy-acceptance"
+                  th:text="#{web.resources.templates.user.sign-up.form.policy-acceptance}"/>
 
             <attr sel="button"
                   th:text="#{web.resources.templates.user.sign-up.form.submit}"/>
 
-            <attr sel="#already_registered"
-                  th:text="#{web.resources.templates.user.sign-up.form.alredy_registered}"/>
-
-            <attr sel="#go_sign_in"
-                  th:text="#{web.resources.templates.user.sign-up.form.go_sign_in}"/>
-
         </attr>
+
+        <attr sel="#already-registered"
+              th:text="#{web.resources.templates.user.sign-up.already-registered}"/>
+
+        <attr sel="#go-sign-in"
+              th:href="@{${T(ua.tucha.passpass.web.util.RouteRegistry$UserRouteRegistry).SIGN_IN}}"
+              th:text="#{web.resources.templates.user.sign-up.go-sign-in}"/>
 
     </thlogic>
 </html>

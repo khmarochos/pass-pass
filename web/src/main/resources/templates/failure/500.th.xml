@@ -4,13 +4,13 @@
         <attr sel="footer"
               th:replace="~{_snippets/footer :: footer}"/>
         <attr sel="#title"
-              th:text="#{web.resources.templates.failure.error500.title}"/>
+              th:text="#{web.resources.templates.failure.500.title}"/>
         <attr sel="failure_code"
-              th:text="#{web.resources.templates.failure.error500.code}"/>
+              th:text="#{web.resources.templates.failure.500.code}"/>
         <attr sel="#failure_name"
-              th:text="#{web.resources.templates.failure.error500.name}"/>
+              th:text="#{web.resources.templates.failure.500.name}"/>
         <attr sel="#failure_description"
-              th:text="#{web.resources.templates.failure.error500.description}"/>
+              th:text="#{web.resources.templates.failure.500.description}"/>
         <attr sel="#href_index"
               th:text="#{web.resources.templates.failure.go_home}"/>
     </thlogic>

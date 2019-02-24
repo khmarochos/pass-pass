@@ -56,7 +56,7 @@ public class UserPasswordValidator implements ConstraintValidator<ValidPassword,
         if (!validateUserPassword(value, messageContainer)) {
             context.disableDefaultConstraintViolation();
             for(String messageLabel: messageContainer) {
-                context.buildConstraintViolationWithTemplate("{" + messageLabel + "}").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate(messageLabel).addConstraintViolation();
             }
             return false;
         }

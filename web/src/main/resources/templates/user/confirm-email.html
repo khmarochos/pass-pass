@@ -21,31 +21,30 @@
         <h1 class="logo-name">хуй</h1>
     </div>
     <div class="accordion" id="accordion">
-        <div class="card" id="apply-verification-token">
-            <div class="card-header" id="heading-apply-verification-token">
+        <div class="card" id="apply-token-card">
+            <div class="card-header" id="apply-token-card-header">
+                <a
+                        data-toggle="collapse"
+                        data-target="#apply-token-collapse"
+                        aria-controls="apply-token-collapse"
+                >
+                    APPLY VERIFICATION TOKEN
+                </a>
                 <h5 class="mb-0">
-                    <a
-                            data-toggle="collapse"
-                            data-target="#collapse-apply-verification-token"
-                            aria-expanded="true"
-                            aria-controls="collapse-apply-verification-token"
-                    >
-                        APPLY VERIFICATION TOKEN
-                    </a>
                 </h5>
             </div>
             <div
-                    id="collapse-apply-verification-token"
-                    class="collapse show in"
-                    aria-labelledby="heading-apply-verification-token"
+                    id="apply-token-collapse"
+                    class="collapse in"
+                    aria-labelledby="apply-token-card-header"
                     data-parent="#accordion"
             >
                 <div class="card-body">
-                    <h3 id="apply-verification-token-header">EMAIL CONFIRMATION</h3>
-                    <p id="apply-verification-token-call">PLEASE, CONFIRM YOUR EMAIL</p>
+                    <h3 id="apply-token-heading">EMAIL CONFIRMATION</h3>
+                    <p id="apply-token-call">ENTER YOUR TOKEN</p>
 
                     <form
-                            id="form-apply-verification-token"
+                            id="apply-token-form"
                             class="m-t"
                             role="form"
                             method="POST"
@@ -53,55 +52,44 @@
                     >
                         <div class="form-group">
                             <input
-                                    id="form--apply-verification-token__token-field"
+                                    id="apply-token-token-field"
                                     type="text"
                                     class="form-control"
                                     placeholder="VERIFICATION TOKEN"
                                     required=""
                             />
-                            <div id="form--apply-verification-token__token-field-errors" class="invalid-feedback"></div>
+                            <div id="apply-token-token-field-feedback" class="invalid-feedback"></div>
                         </div>
                         <button type="submit" class="btn btn-primary block full-width m-b">CONFIRM</button>
-
-                        <p class="text-muted text-center">
-                            <small id="code_not_received">DIDN'T GET THE CODE?</small>
-                        </p>
-                        <a
-                                id="resend_confirmation_code"
-                                class="btn btn-sm btn-white btn-block"
-                                href="#resend"
-                        >
-                            RESEND CONFIRMATION CODE
-                        </a>
                     </form>
+
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-header" id="headingResendVerificationToken">
+        <div class="card" id="order-token-card">
+            <div class="card-header" id="order-token-card-header">
                 <h5 class="mb-0">
                     <a
                             data-toggle="collapse"
-                            data-target="#collapseResendVerificationToken"
-                            aria-expanded="false"
-                            aria-controls="collapseResendVerificationToken"
+                            data-target="#order-token-collapse"
+                            aria-controls="order-token-collapse"
                     >
-                        RESEND VERIFICATIO TOKEN
+                        ORDER NEW TOKEN
                     </a>
                 </h5>
             </div>
             <div
-                    id="collapseResendVerificationToken"
+                    id="order-token-collapse"
                     class="collapse in"
-                    aria-labelledby="headingResendVerificationToken"
+                    aria-labelledby="order-token-collapse"
                     data-parent="#accordion"
             >
                 <div class="card-body">
-                    <h3 id="please_confirm_email_m1">EMAIL CONFIRMATION</h3>
-                    <p id="please_confirm_email_m2">PLEASE, CONFIRM YOUR EMAIL</p>
+                    <h3 id="order-token-heading">TOKEN GENERATION</h3>
+                    <p id="order-token-call">ENTER YOUR EMAIL</p>
 
                     <form
-                            id="verification_form"
+                            id="order-token-form"
                             class="m-t"
                             role="form"
                             method="POST"
@@ -109,27 +97,17 @@
                     >
                         <div class="form-group">
                             <input
-                                    id="verification_token_field"
+                                    id="order-token-email-field"
                                     type="text"
                                     class="form-control"
-                                    placeholder="CONFIRMATION CODE"
+                                    placeholder="EMAIL ADDRESS"
                                     required=""
                             />
-                            <div id="verification_token_field_errors" class="invalid-feedback"></div>
+                            <div id="order-token-email-field-feedback" class="invalid-feedback"></div>
                         </div>
                         <button type="submit" class="btn btn-primary block full-width m-b">CONFIRM</button>
-
-                        <p class="text-muted text-center">
-                            <small id="code_not_received">DIDN'T GET THE CODE?</small>
-                        </p>
-                        <a
-                                id="resend_confirmation_code"
-                                class="btn btn-sm btn-white btn-block"
-                                href="#resend"
-                        >
-                            RESEND CONFIRMATION CODE
-                        </a>
                     </form>
+
                 </div>
             </div>
         </div>

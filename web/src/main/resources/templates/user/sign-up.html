@@ -21,11 +21,11 @@
             <h1 class="logo-name">хуй</h1>
         </div>
 
-        <h3 id="please_register_m1">USER REGISTRATION</h3>
-        <p id="please_register_m2">PLEASE, SIGN UP TO SEE IT IN ACTION</p>
+        <h3 id="heading">USER REGISTRATION</h3>
+        <p id="call-to-register">PLEASE, SIGN UP TO SEE IT IN ACTION</p>
 
         <form
-                id="registration_form"
+                id="form"
                 class="m-t"
                 role="form"
                 method="POST"
@@ -33,56 +33,58 @@
         >
             <div class="form-group">
                 <input
-                        id="name_field"
+                        id="name-field"
                         type="text"
                         class="form-control"
                         placeholder="FULL NAME"
                         required=""
                 />
+                <div id="name-field-feedback" class="invalid-feedback"></div>
             </div>
             <div class="form-group">
                 <input
-                        id="email_field"
+                        id="email-field"
                         type="email"
                         class="form-control"
                         placeholder="EMAIL"
                         required=""
                 />
-                <div id="email_field_errors" class="invalid-feedback"></div>
+                <div id="email-field-feedback" class="invalid-feedback"></div>
             </div>
             <div class="form-group">
                 <input
-                        id="password_field"
+                        id="password-field"
                         type="password"
                         class="form-control"
                         placeholder="PASSWORD"
                         required=""
                 >
-                <div id="password_field_errors" class="invalid-feedback"></div>
+                <div id="password-field-feedback" class="invalid-feedback"></div>
             </div>
             <div class="form-group">
                 <div class="checkbox i-checks">
                     <label>
                         <input
                                 type="checkbox"
-                                id="policy_acceptance_checkbox"
+                                id="policy-acceptance-checkbox"
                                 value="true"
-                        >&nbsp;<span id="policy_acceptance">I AGREE THE TERMS AND POLICY</span>
+                        >&nbsp;<span id="policy-acceptance">I AGREE THE TERMS AND POLICY</span>
                     </label>
                 </div>
-                <div id="policy_acceptance_checkbox_errors" class="invalid-feedback"></div>
+                <div id="policy-acceptance-feedback" class="invalid-feedback"></div>
             </div>
             <button type="submit" class="btn btn-primary block full-width m-b">REGISTER</button>
 
-            <p class="text-muted text-center">
-                <small id="already_registered">ALREADY REGISTERED?</small>
-            </p>
-            <a
-                    id="go_sign_in"
-                    class="btn btn-sm btn-white btn-block"
-                    href="/404"
-            >SIGN IN</a>
         </form>
+
+        <p class="text-muted text-center">
+            <small id="already-registered">ALREADY REGISTERED?</small>
+        </p>
+        <a
+                id="go-sign-in"
+                class="btn btn-sm btn-white btn-block"
+                href="/404"
+        >SIGN IN</a>
 
     </div>
     <footer>Made by Tucha.UA</footer>

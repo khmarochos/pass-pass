@@ -8,24 +8,64 @@
         <attr sel="#title"
               th:text="#{web.resources.templates.user.confirm-email.title}"/>
 
-        <attr sel="#headingApplyVerificationToken">
+        <attr sel="#apply-token-card">
 
-            <attr sel="a"
-                  th:text="|Apply Verification Token|" />
+            <attr sel="#apply-token-card-header">
+                <attr sel="a"
+                      th:text="#{web.resources.templates.user.confirm-email.apply-token-card-header}"
+                      th:aria-expanded="${action == T(ua.tucha.passpass.web.controller.UserController).ACTION_APPLY_TOKEN} ? true : false"
+                />
+            </attr>
+
+            <attr sel="#apply-token-collapse"
+                  th:classappend="${action == T(ua.tucha.passpass.web.controller.UserController).ACTION_APPLY_TOKEN} ? 'show' : ''"
+            />
+
+            <attr sel="#apply-token-form"
+                  th:object="${verificationTokenDTO}"
+                  th:action="@{${T(ua.tucha.passpass.web.util.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL}}">
+
+                <attr sel="#apply-token-token-field"
+                      th:field="*{verificationToken}"
+                      th:placeholder="#{web.resources.templates.user.confirm-email.apply-form.token-field.placeholder}"
+                      th:errorclass="is-invalid" />
+                <attr sel="#apply-token-token-field-feedback"
+                      th:each="error: ${#fields.errors('verificationToken')}"
+                      th:text="${error}"/>
+
+            </attr>
 
         </attr>
 
-        <attr sel="#verification_form"
-              th:action="@{${T(ua.tucha.passpass.web.util.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL}}"
-              th:object="${verificationTokenDTO}">
+        <attr sel="#order-token-card">
 
-            <attr sel="#verification_token_field"
-                  th:field="*{verificationToken}"
-                  th:placeholder="#{web.resources.templates.user.confirm-email.form.placeholder.token}"
-                  th:errorclass="is-invalid" />
-            <attr sel="#verification_token_field_errors"
-                  th:each="error: ${#fields.errors('verificationToken')}"
-                  th:text="${error}"/>
+            <attr sel="#order-token-card-header">
+                <attr sel="a"
+                      th:text="#{web.resources.templates.user.confirm-email.order-token-card-header}"
+                      th:aria-expanded="${action == T(ua.tucha.passpass.web.controller.UserController).ACTION_ORDER_TOKEN} ? true : false"
+                />
+            </attr>
+
+            <attr sel="#order-token-collapse"
+                  th:classappend="${action == T(ua.tucha.passpass.web.controller.UserController).ACTION_ORDER_TOKEN} ? 'show' : ''"
+            />
+
+            <attr sel="#order-token-form"
+                  th:object="${emailDTO}"
+                  th:action="@{
+                        ${T(ua.tucha.passpass.web.util.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL} + '/' +
+                        ${T(ua.tucha.passpass.web.controller.UserController).ACTION_ORDER_TOKEN}
+                  }">
+
+                <attr sel="#order-token-email-field"
+                      th:field="*{email}"
+                      th:placeholder="#{web.resources.templates.user.confirm-email.order-form.email-field.placeholder}"
+                      th:errorclass="is-invalid" />
+                <attr sel="#order-token-email-field-feedback"
+                      th:each="error: ${#fields.errors('email')}"
+                      th:text="${error}"/>
+
+            </attr>
 
         </attr>
 
