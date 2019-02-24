@@ -8,6 +8,13 @@
         <attr sel="#title"
               th:text="#{web.resources.templates.user.confirm-email.title}"/>
 
+        <attr sel="#headingApplyVerificationToken">
+
+            <attr sel="a"
+                  th:text="|Apply Verification Token|" />
+
+        </attr>
+
         <attr sel="#verification_form"
               th:action="@{${T(ua.tucha.passpass.web.util.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL}}"
               th:object="${verificationTokenDTO}">

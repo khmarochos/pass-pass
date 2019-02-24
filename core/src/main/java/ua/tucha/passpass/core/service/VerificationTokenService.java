@@ -73,9 +73,17 @@ public class VerificationTokenService {
         String messageRecipient =
                 user.getEmail();
         String messageSubject =
-                messages.getMessage("core.service.VerificationTokenService.message.subject", null, locale);
+                messages.getMessage(
+                        "core.service.VerificationTokenService.sendVerificationTokenToConfirmEmail.message.subject",
+                        null,
+                        locale
+                );
         String messageBody =
-                messages.getMessage("core.service.VerificationTokenService.message.body", messageArgs, locale);
+                messages.getMessage(
+                        "core.service.VerificationTokenService.sendVerificationTokenToConfirmEmail.message.body",
+                        messageArgs,
+                        locale
+                );
         ;
         // TODO: use Thymeleaf!
 
