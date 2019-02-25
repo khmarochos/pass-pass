@@ -1,0 +1,42 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group 'ua.tucha'
+version '0.0.1-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    // Spring is coming
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    
+    //
+    implementation 'mysql:mysql-connector-java'
+    
+    // Lombok rules :-)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
+    // Needed for email validation
+    compile group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
+    
+    // Needed for custom validators
+    compile group: 'commons-validator', name: 'commons-validator', version: '1.6'
+    
+    // Password encryption and sanity checking services
+    compile group: 'org.passay', name: 'passay', version: '1.4.0'
+    
+    // Database encryption services
+    compile group: 'org.jasypt', name: 'jasypt', version: '1.9.2'
+    compile group: 'org.jasypt', name: 'jasypt-hibernate5', version: '1.9.3-SNAPSHOT'
+}
+

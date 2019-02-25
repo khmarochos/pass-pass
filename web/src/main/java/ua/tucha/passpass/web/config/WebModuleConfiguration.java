@@ -2,14 +2,13 @@ package ua.tucha.passpass.web.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.CacheControl;
@@ -23,15 +22,22 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = "ua.tucha.passpass")
-@PropertySource(value = { "classpath:application.properties" })
-public class MvcWebConfig implements WebMvcConfigurer {
+@ComponentScan(basePackages = "ua.tucha.passpass.web")
+public class WebModuleConfiguration implements WebMvcConfigurer {
 
     private final PropertyResolver environment;
+    private final MessageSource messageSource;
+    private final LocalValidatorFactoryBean localValidatorFactoryBean;
 
     @Autowired
-    public MvcWebConfig(PropertyResolver environment) {
+    public WebModuleConfiguration(
+            PropertyResolver environment,
+            MessageSource messageSource,
+            @Qualifier("coreLocalValidatorFactoryBean") LocalValidatorFactoryBean localValidatorFactoryBean
+    ) {
         this.environment = environment;
+        this.messageSource = messageSource;
+        this.localValidatorFactoryBean = localValidatorFactoryBean;
     }
 
     @Override
@@ -49,19 +55,9 @@ public class MvcWebConfig implements WebMvcConfigurer {
         return eventMulticaster;
     }
 
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
-    }
-
-    @Bean
+    @Bean(name = "webLocalValidatorFactoryBean")
     public LocalValidatorFactoryBean getValidator() {
-        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
-        localValidatorFactoryBean.setValidationMessageSource(messageSource());
-        return localValidatorFactoryBean;
+        return this.localValidatorFactoryBean;
     }
 
 }

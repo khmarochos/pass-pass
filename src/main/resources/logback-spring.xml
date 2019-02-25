@@ -1,7 +1,7 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="ua.tucha.passpass" level="TRACE" />
-    <logger name="org.springframework" level="INFO" />
+    <logger name="org.springframework" level="TRACE" />
     <logger name="org.thymeleaf" level="INFO" />
-    <logger name="org.hibernate" level="INFO" />
+    <logger name="org.hibernate" level="TRACE" />
 </configuration>
