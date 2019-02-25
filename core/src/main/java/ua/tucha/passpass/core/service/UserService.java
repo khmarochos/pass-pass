@@ -51,13 +51,14 @@ public class UserService {
         }
         Date currentDate = new Date();
         user.setCreated(currentDate);
-        userRepository.save(user);
+        updateUser(user);
         return user;
     }
 
 
 
     public void updateUser(User user) {
+        user.setEmail(null);
         userRepository.save(user);
     }
 
