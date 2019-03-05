@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.tucha.passpass.core.model.User;
 import ua.tucha.passpass.core.model.VerificationToken;
+import ua.tucha.passpass.core.model.VerificationTokenPurpose;
 import ua.tucha.passpass.core.repository.UserRepository;
 import ua.tucha.passpass.core.service.exception.EmailNotUniqueException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredException;
+import ua.tucha.passpass.core.service.exception.VerificationTokenMispurposedException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
 
 import javax.validation.constraints.NotNull;
@@ -25,7 +27,6 @@ public class UserService {
     private final VerificationTokenService verificationTokenService;
 
 
-
     // the constructor
     @Autowired
     public UserService(
@@ -37,13 +38,10 @@ public class UserService {
     }
 
 
-
     public User getUser(@NotNull long userId) {
         Optional<User> user = userRepository.findById(userId);
         return user.isEmpty() ? null : user.get();
     }
-
-
 
     public User createUser(User user) throws EmailNotUniqueException {
         if (emailExists(user.getEmail())) {
@@ -55,27 +53,38 @@ public class UserService {
         return user;
     }
 
-
-
     public void updateUser(User user) {
-        user.setEmail(null);
         userRepository.save(user);
     }
 
 
-
-    public User applyVerificationToken(VerificationToken verificationToken) throws VerificationTokenExpiredException {
+    public User applyVerificationToken(
+            VerificationToken verificationToken,
+            VerificationTokenPurpose.Purpose purpose
+    ) throws
+            VerificationTokenExpiredException,
+            VerificationTokenMispurposedException
+    {
         verificationTokenService.applyVerificationToken(
                 verificationToken,
+                purpose,
                 true,
                 true
         );
         return verificationToken.getUser();
     }
 
-    public User applyVerificationToken(String verificationToken) throws VerificationTokenNotFoundException, VerificationTokenExpiredException {
+    public User applyVerificationToken(
+            String verificationToken,
+            VerificationTokenPurpose.Purpose purpose
+    ) throws
+            VerificationTokenNotFoundException,
+            VerificationTokenExpiredException,
+            VerificationTokenMispurposedException
+    {
         verificationTokenService.applyVerificationToken(
                 verificationToken,
+                purpose,
                 true,
                 true
         );
@@ -83,12 +92,17 @@ public class UserService {
     }
 
 
-
-    public void verifyEmailByToken(String verificationToken) throws VerificationTokenNotFoundException, VerificationTokenExpiredException {
-        User user = applyVerificationToken(verificationToken);
-        user.setVerified(currentDate());
+    public void verifyEmailByToken(String verificationToken) throws
+            VerificationTokenNotFoundException,
+            VerificationTokenExpiredException,
+            VerificationTokenMispurposedException
+    {
+        User user = applyVerificationToken(verificationToken, VerificationTokenPurpose.Purpose.EMAIL_CONFIRMATION);
+        if(user != null) {
+            user.setVerified(currentDate());
+            userRepository.save(user);
+        }
     }
-
 
 
     public User findUserByVerificationToken(VerificationToken verificationToken) {
@@ -99,18 +113,21 @@ public class UserService {
         User user = null;
         VerificationToken verificationToken =
                 verificationTokenService.findVerificationTokenByToken(verificationTokenString);
-        if(verificationToken != null) {
+        if (verificationToken != null) {
             user = findUserByVerificationToken(verificationToken);
         }
         return user;
     }
 
 
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
 
     private boolean emailExists(String email) {
         return userRepository.findByEmail(email) != null;
     }
-
 
 
     private java.sql.Date currentDate() {

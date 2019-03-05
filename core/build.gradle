@@ -20,6 +20,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     
     //
+    compile group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+
+    //
     implementation 'mysql:mysql-connector-java'
     
     // Lombok rules :-)

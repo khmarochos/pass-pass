@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">TITLE MESSAGE</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/passpass.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+
+<div class="text-center animated fadeInDown middle-box w-100">
+
+    <div>
+        <h1 id="logo-text" class="logo-name">...</h1>
+    </div>
+    <div class="row">
+        <div class="w-100">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li>
+                        <a
+                                id="existing-user-tab-header"
+                                class="nav-link"
+                                data-toggle="tab"
+                                href="#existing-user-tab"
+                        >
+                            EXISTING USER
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                                id="new-user-tab-header"
+                                class="nav-link"
+                                data-toggle="tab"
+                                href="#new-user-tab"
+                        >
+                            NEW USER
+                        </a>
+                </ul>
+                <div class="tab-content">
+
+                    <div role="tabpanel" id="existing-user-tab" class="tab-pane">
+                    </div>
+
+                    <div role="tabpanel" id="new-user-tab" class="tab-pane">
+                        <div class="panel-body">
+
+                            <div class="accordion" id="new-user-accordion">
+
+                                <div class="card gray-bg" id="sign-up-card">
+                                    <div class="card-header" id="sign-up-card-header">
+                                        <h5 class="mb-0">
+                                            <a
+                                                    data-toggle="collapse"
+                                                    data-target="#sign-up-card-content"
+                                                    aria-controls="sign-up-card-content"
+                                                    class="accordion-toggle"
+                                                    role="button"
+                                            >
+                                                REGISTER AN ACCOUNT
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div
+                                            id="sign-up-card-content"
+                                            class="collapse in"
+                                            aria-labelledby="sign-up-card-header"
+                                            data-parent="#new-user-accordion"
+                                    >
+                                        <div class="card-body">
+                                            <h3 id="sign-up-heading">USER REGISTRATION</h3>
+                                            <p id="sign-up-call">PLEASE, SIGN UP TO SEE IT IN ACTION</p>
+
+                                            <form
+                                                    id="sign-up-form"
+                                                    class="m-t"
+                                                    role="form"
+                                                    method="POST"
+                                                    action="/404"
+                                            >
+                                                <div class="form-group">
+                                                    <input
+                                                            id="sign-up-form-name-field"
+                                                            type="text"
+                                                            class="form-control"
+                                                            placeholder="FULL NAME"
+                                                            required=""
+                                                    />
+                                                    <div id="sign-up-form-name-field-feedback"
+                                                         class="invalid-feedback"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input
+                                                            id="sign-up-form-email-field"
+                                                            type="email"
+                                                            class="form-control"
+                                                            placeholder="EMAIL"
+                                                            required=""
+                                                    />
+                                                    <div id="sign-up-form-email-field-feedback"
+                                                         class="invalid-feedback"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input
+                                                            id="sign-up-form-password-field"
+                                                            type="password"
+                                                            class="form-control"
+                                                            placeholder="PASSWORD"
+                                                            required=""
+                                                    />
+                                                    <div id="password-field-feedback" class="invalid-feedback"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="checkbox i-checks">
+                                                        <label>
+                                                            <input
+                                                                    type="checkbox"
+                                                                    id="sign-up-form-policy-acceptance-checkbox"
+                                                                    value="true"
+                                                            />&nbsp;<span id="sign-up-form-policy-acceptance-label">I AGREE THE TERMS AND POLICY</span>
+                                                        </label>
+                                                    </div>
+                                                    <div id="sign-up-form-policy-acceptance-checkbox-feedback"
+                                                         class="invalid-feedback"></div>
+                                                </div>
+                                                <button
+                                                        type="submit"
+                                                        class="btn btn-primary block full-width m-b">
+                                                    REGISTER
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card gray-bg" id="confirm-email-order-token-card">
+                                    <div class="card-header" id="confirm-email-order-token-card-header">
+                                        <h5 class="mb-0">
+                                            <a
+                                                    data-toggle="collapse"
+                                                    data-target="#confirm-email-order-token-card-content"
+                                                    aria-controls="confirm-email-order-token-card-content"
+                                                    class="accordion-toggle"
+                                                    role="button"
+                                            >
+                                                RESEND A VERIFICATION TOKEN
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div
+                                            id="confirm-email-order-token-card-content"
+                                            class="collapse in"
+                                            aria-labelledby="confirm-email-order-token-card-header"
+                                            data-parent="#new-user-accordion"
+                                    >
+                                        <div class="card-body">
+                                            <h3 id="confirm-email-order-token-heading">ORDER A NEW TOKEN</h3>
+                                            <p id="confirm-email-order-token-call">PLEASE, ENTER YOUR EMAIL TO GET A NEW TOKEN</p>
+
+                                            <form
+                                                    id="confirm-email-order-token-form"
+                                                    class="m-t"
+                                                    role="form"
+                                                    method="POST"
+                                                    action="/404"
+                                            >
+                                                <div class="form-group">
+                                                    <input
+                                                            id="confirm-email-order-token-form-email-field"
+                                                            type="email"
+                                                            class="form-control"
+                                                            placeholder="EMAIL"
+                                                            required=""
+                                                    />
+                                                    <div id="confirm-email-order-token-form-email-field-feedback"
+                                                         class="invalid-feedback"></div>
+                                                </div>
+                                                <button
+                                                        type="submit"
+                                                        class="btn btn-primary block full-width m-b">
+                                                    GET A TOKEN
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card gray-bg" id="confirm-email-apply-token-card">
+                                    <div class="card-header" id="confirm-email-apply-token-card-header">
+                                        <h5 class="mb-0">
+                                            <a
+                                                    data-toggle="collapse"
+                                                    data-target="#confirm-email-apply-token-card-content"
+                                                    aria-controls="confirm-email-apply-token-card-content"
+                                                    class="accordion-toggle"
+                                                    role="button"
+                                            >
+                                                FINISH REGISTRATION
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div
+                                            id="confirm-email-apply-token-card-content"
+                                            class="collapse in"
+                                            aria-labelledby="confirm-email-apply-token-card-header"
+                                            data-parent="#new-user-accordion"
+                                    >
+                                        <div class="card-body">
+                                            <h3 id="confirm-email-apply-token-heading">APPLY THE TOKEN YOU'VE GOT</h3>
+                                            <p id="confirm-email-apply-token-call">PLEASE, ENTER THE VERIFICATION TOKEN TO FINISH
+                                                REGISTRATION</p>
+
+                                            <form
+                                                    id="confirm-email-apply-token-form"
+                                                    class="m-t"
+                                                    role="form"
+                                                    method="POST"
+                                                    action="/404"
+                                            >
+                                                <div class="form-group">
+                                                    <input
+                                                            id="confirm-email-apply-token-form-token-field"
+                                                            type="text"
+                                                            class="form-control"
+                                                            placeholder="TOKEN"
+                                                            required=""
+                                                    />
+                                                    <div id="confirm-email-apply-token-form-token-field-feedback"
+                                                         class="invalid-feedback"></div>
+                                                </div>
+                                                <button
+                                                        type="submit"
+                                                        class="btn btn-primary block full-width m-b">
+                                                    APPLY A TOKEN
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>Made by Tucha.UA</footer>
+</div>
+
+<script src="/static/js/jquery-3.1.1.min.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+
+</body>
+
+</html>
+
+<!--
+ 1. /user/sign-in
+ 2. /user/reset-password/order-token
+ 3. /user/reset-password/apply-token
+ 4. /user/sign-up
+ 5. /user/confirm-email/order-token
+ 6. /user/confirm-email/apply-token
+-->

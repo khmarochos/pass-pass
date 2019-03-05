@@ -9,12 +9,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ua.tucha.passpass.core.model.User;
 import ua.tucha.passpass.core.model.VerificationToken;
+import ua.tucha.passpass.core.model.VerificationTokenPurpose;
 import ua.tucha.passpass.core.repository.VerificationTokenRepository;
 import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredException;
+import ua.tucha.passpass.core.service.exception.VerificationTokenMispurposedException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
 
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
@@ -43,12 +45,13 @@ public class VerificationTokenService {
 
     // Here be the constructor methods
 
-    public VerificationToken createVerificationToken(User user) {
+    public VerificationToken createVerificationToken(User user, VerificationTokenPurpose.Purpose purpose) {
         String uniqueIdentifier = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(uniqueIdentifier);
         verificationToken.setExpiry(calculateExpiryDate());
         verificationToken.setUser(user);
+        verificationToken.setVerificationTokenPurpose(purpose);
         verificationTokenRepository.save(verificationToken);
         return verificationToken;
     }
@@ -94,12 +97,12 @@ public class VerificationTokenService {
         mailSender.send(email);
     }
 
-    public void sendVerificationTokenToConfirmEmail(
+    public void createAndSendVerificationTokenToConfirmEmail(
             @NotNull User user,
             @NotNull String appURL,
             @NotNull Locale locale
     ) {
-        VerificationToken verificationToken = createVerificationToken(user);
+        VerificationToken verificationToken = createVerificationToken(user, VerificationTokenPurpose.Purpose.EMAIL_CONFIRMATION);
         sendVerificationTokenToConfirmEmail(verificationToken, user, appURL, locale);
     }
 
@@ -115,11 +118,25 @@ public class VerificationTokenService {
     }
 
 
+    boolean checkVerificationTokenPurpose(@NotNull VerificationToken verificationToken, VerificationTokenPurpose.Purpose purpose) {
+        return verificationToken.getVerificationTokenPurpose() == purpose;
+    }
+
+    boolean checkVerificationTokenPurpose(@NotNull String verificationTokenString, VerificationTokenPurpose.Purpose purpose) {
+        VerificationToken verificationToken = findVerificationTokenByToken(verificationTokenString);
+        return verificationToken != null && checkVerificationTokenPurpose(verificationToken, purpose);
+    }
+
+
     boolean applyVerificationToken(
             @NotNull VerificationToken verificationToken,
+            VerificationTokenPurpose.Purpose purpose,
             boolean expireToken,
             boolean raiseException
-    ) throws VerificationTokenExpiredException {
+    ) throws
+            VerificationTokenExpiredException,
+            VerificationTokenMispurposedException
+    {
         // Checking the token
         if (!checkVerificationToken(verificationToken)) {
             if (raiseException) {
@@ -127,23 +144,34 @@ public class VerificationTokenService {
                         + verificationToken.getToken()
                         + " is expired"
                 );
-            } else {
-                return false;
             }
+        } else if (!checkVerificationTokenPurpose(verificationToken, purpose)) {
+            if (raiseException) {
+                throw new VerificationTokenMispurposedException("Verification token "
+                        + verificationToken.getToken()
+                        + " is not for that"
+                );
+            }
+        } else {
+            if (expireToken) {
+                verificationToken.setExpiry(currentDate());
+                verificationTokenRepository.save(verificationToken);
+            }
+            return true;
         }
-        // Disabling the token if needed
-        if (expireToken) {
-            verificationToken.setExpiry(currentDate());
-            verificationTokenRepository.save(verificationToken);
-        }
-        return true;
+        return false;
     }
 
     public boolean applyVerificationToken(
             @NotNull String verificationTokenString,
+            VerificationTokenPurpose.Purpose purpose,
             boolean expireToken,
             boolean raiseException
-    ) throws VerificationTokenNotFoundException, VerificationTokenExpiredException {
+    ) throws
+            VerificationTokenNotFoundException,
+            VerificationTokenExpiredException,
+            VerificationTokenMispurposedException
+    {
         VerificationToken verificationToken = findVerificationTokenByToken(verificationTokenString);
         if (verificationToken == null) {
             if (raiseException) {
@@ -152,7 +180,7 @@ public class VerificationTokenService {
                 return false;
             }
         }
-        return applyVerificationToken(verificationToken, expireToken, raiseException);
+        return applyVerificationToken(verificationToken, purpose, expireToken, raiseException);
     }
 
 

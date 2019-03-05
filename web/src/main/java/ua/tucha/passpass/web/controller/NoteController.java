@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ua.tucha.passpass.core.model.Note;
 import ua.tucha.passpass.core.service.NoteService;
-import ua.tucha.passpass.web.util.RouteRegistry;
+import ua.tucha.passpass.web.router.RouteRegistry;
 
 @Slf4j
 @RestController

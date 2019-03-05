@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.util.Date;
 
 @Table
 @Entity
@@ -33,5 +33,7 @@ public class VerificationToken {
     private User user;
 
     private Date expiry;
+
+    private VerificationTokenPurpose.Purpose verificationTokenPurpose;
 
 }

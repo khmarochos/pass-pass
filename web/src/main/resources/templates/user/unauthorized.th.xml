@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+
+    <thlogic>
+
+        <attr sel="#title"
+              th:text="#{web.resources.templates.user.unauthorized.title}"/>
+        <attr sel="#logo-text"
+              th:text="|хуй|"/>
+        <attr sel="footer"
+              th:replace="~{_snippets/footer :: footer}"/>
+        <attr sel="#existing-user-tab-header"
+              th:text="#{web.resources.templates.user.unauthorized.existing-user-tab-header}"/>
+        <attr sel="#new-user-tab"
+              th:classappend="${
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_UP) ||
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_ORDER_TOKEN) ||
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_APPLY_TOKEN)
+              } ? 'active' : ''"/>
+        <attr sel="#new-user-tab-header"
+              th:classappend="${
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_UP) ||
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_ORDER_TOKEN) ||
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_APPLY_TOKEN)
+              } ? 'active' : ''"
+              th:text="#{web.resources.templates.user.unauthorized.new-user-tab-header}"/>
+
+        <attr sel="#sign-up-card">
+            <attr sel="#sign-up-card-header">
+                <attr sel="a"
+                      th:aria-expanded="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_UP} ? true : false"
+                      th:text="#{web.resources.templates.user.unauthorized.sign-up-card.sign-up-card-header}"/>
+            </attr>
+            <attr sel="#sign-up-card-content"
+                  th:classappend="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_UP} ? 'show' : ''">
+                <attr sel="#sign-up-heading"
+                      th:text="#{web.resources.templates.user.unauthorized.sign-up-card.sign-up-heading}"/>
+                <attr sel="#sign-up-call"
+                      th:text="#{web.resources.templates.user.unauthorized.sign-up-card.sign-up-call}"/>
+                <attr sel="#sign-up-form"
+                      th:action="@{${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_UP}}"
+                      th:object="${userDTO}">
+                    <attr sel="#sign-up-form-name-field"
+                          th:field="*{name}"
+                          th:errorclass="is-invalid"
+                          th:placeholder="#{web.resources.templates.user.unauthorized.sign-up-card.sign-up-form.name-field.placeholder}"/>
+                    <attr sel="#sign-up-form-name-field-feedback"
+                          th:each="error: ${#fields.errors('name')}"
+                          th:text="${error}"/>
+                    <attr sel="#sign-up-form-email-field"
+                          th:field="*{email}"
+                          th:errorclass="is-invalid"
+                          th:placeholder="#{web.resources.templates.user.unauthorized.sign-up-card.sign-up-form.email-field.placeholder}"/>
+                    <attr sel="#sign-up-form-email-field-feedback"
+                          th:each="error: ${#fields.errors('email')}"
+                          th:text="${error}"/>
+                    <attr sel="#sign-up-form-password-field"
+                          th:field="*{password}"
+                          th:errorclass="is-invalid"
+                          th:placeholder="#{web.resources.templates.user.unauthorized.sign-up-card.sign-up-form.password-field.placeholder}"/>
+                    <attr sel="#sign-up-form-password-field-feedback"
+                          th:each="error: ${#fields.errors('password')}"
+                          th:text="${error}"/>
+                    <attr sel="#sign-up-form-policy-acceptance-checkbox"
+                          th:errorclass="is-invalid"
+                          th:field="*{policyAccepted}"/>
+                    <attr sel="#sign-up-form-policy-acceptance-checkbox-feedback"
+                          th:each="error: ${#fields.errors('policyAccepted')}"
+                          th:text="${error}"/>
+                    <attr sel="#sign-up-form-policy-acceptance-label"
+                          th:text="#{web.resources.templates.user.unauthorized.sign-up-card.sign-up-form.sign-up-form-policy-acceptance-label}"/>
+                    <attr sel="button"
+                          th:text="#{web.resources.templates.user.unauthorized.sign-up-card.sign-up-form.submit-button}"/>
+                </attr>
+            </attr>
+        </attr>
+
+        <attr sel="#confirm-email-order-token-card">
+            <attr sel="#confirm-email-order-token-card-header">
+                <attr sel="a"
+                      th:aria-expanded="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_ORDER_TOKEN} ? true : false"
+                      th:text="#{web.resources.templates.user.unauthorized.confirm-email-order-token-card.confirm-email-order-token-card-header}"/>
+            </attr>
+            <attr sel="#confirm-email-order-token-card-content"
+                  th:classappend="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_ORDER_TOKEN} ? 'show' : ''">
+                <attr sel="#confirm-email-order-token-heading"
+                      th:text="#{web.resources.templates.user.unauthorized.confirm-email-order-token-card.confirm-email-order-token-heading}"/>
+                <attr sel="#confirm-email-order-token-call"
+                      th:text="#{web.resources.templates.user.unauthorized.confirm-email-order-token-card.confirm-email-order-token-call}"/>
+            </attr>
+            <attr sel="#confirm-email-order-token-form"
+                  th:action="@{${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_ORDER_TOKEN}}"
+                  th:object="${emailDTO}">
+                <attr sel="#confirm-email-order-token-form-email-field"
+                      th:field="*{email}"
+                      th:errorclass="is-invalid"
+                      th:placeholder="#{web.resources.templates.user.unauthorized.confirm-email-order-token-card.confirm-email-order-token-form.email-field.placeholder}"/>
+                <attr sel="#confirm-email-order-token-form-email-field-feedback"
+                      th:each="error: ${#fields.errors('email')}"
+                      th:text="${error}"/>
+                <attr sel="button"
+                      th:text="#{web.resources.templates.user.unauthorized.confirm-email-order-token-card.confirm-email-order-token-form.submit-button}"/>
+            </attr>
+        </attr>
+
+        <attr sel="#confirm-email-apply-token-card">
+            <attr sel="#confirm-email-apply-token-card-header">
+                <attr sel="a"
+                      th:aria-expanded="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_APPLY_TOKEN} ? true : false"
+                      th:text="#{web.resources.templates.user.unauthorized.confirm-email-apply-token-card.confirm-email-apply-token-card-header}"/>
+            </attr>
+            <attr sel="#confirm-email-apply-token-card-content"
+                  th:classappend="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_APPLY_TOKEN} ? 'show' : ''">
+                <attr sel="#confirm-email-apply-token-heading"
+                      th:text="#{web.resources.templates.user.unauthorized.confirm-email-apply-token-card.confirm-email-apply-token-heading}"/>
+                <attr sel="#confirm-email-apply-token-call"
+                      th:text="#{web.resources.templates.user.unauthorized.confirm-email-apply-token-card.confirm-email-apply-token-call}"/>
+            </attr>
+            <attr sel="#confirm-email-apply-token-form"
+                  th:action="@{${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_APPLY_TOKEN}}"
+                  th:object="${verificationTokenDTO}">
+                <attr sel="#confirm-email-apply-token-form-token-field"
+                      th:field="*{verificationToken}"
+                      th:errorclass="is-invalid"
+                      th:placeholder="#{web.resources.templates.user.unauthorized.confirm-email-apply-token-card.confirm-email-apply-token-form.token-field.placeholder}"/>
+                <attr sel="#confirm-email-apply-token-form-token-field-feedback"
+                      th:each="error: ${#fields.errors('verificationToken')}"
+                      th:text="${error}"/>
+                <attr sel="button"
+                      th:text="#{web.resources.templates.user.unauthorized.confirm-email-apply-token-card.confirm-email-apply-token-form.submit-button}"/>
+            </attr>
+        </attr>
+
+    </thlogic>
+</html>

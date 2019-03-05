@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ua.tucha.passpass.web.util.RouteRegistry.FailureRouteRegistry;
-import ua.tucha.passpass.web.util.ViewSelector;
+import ua.tucha.passpass.web.router.RouteRegistry.FailureRouteRegistry;
+import ua.tucha.passpass.web.router.ViewSelector;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -86,7 +86,7 @@ public class FailureController implements ErrorController {
         viewHandler = (viewHandler = failureCodeRoute.get(statusCode)) != null
                 ? viewHandler
                 : FailureRouteRegistry.DEFAULT;
-        return(viewSelector.selectView(viewHandler));
+        return(viewSelector.selectViewByName(viewHandler));
     }
 
     @Override
