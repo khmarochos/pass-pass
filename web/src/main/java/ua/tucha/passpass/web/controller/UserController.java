@@ -1,13 +1,9 @@
 package ua.tucha.passpass.web.controller;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.tucha.passpass.core.model.User;
 import ua.tucha.passpass.core.model.VerificationTokenPurpose;
 import ua.tucha.passpass.core.service.UserService;
-import ua.tucha.passpass.core.service.VerificationTokenService;
 import ua.tucha.passpass.core.service.exception.EmailNotUniqueException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenMispurposedException;
@@ -31,8 +26,6 @@ import ua.tucha.passpass.web.model.DTO.UserDTO;
 import ua.tucha.passpass.web.model.DTO.VerificationTokenDTO;
 import ua.tucha.passpass.web.router.RouteRegistry.UserRouteRegistry;
 import ua.tucha.passpass.web.router.ViewSelector;
-
-import java.util.Locale;
 
 @Slf4j
 @Controller
@@ -59,7 +52,6 @@ public class UserController {
 
     private final ViewSelector viewSelector;
     private final UserService userService;
-    private final VerificationTokenService verificationTokenService;
     private final ApplicationEventPublisher eventPublisher;
     private final ModelMapper modelMapper;
 
@@ -67,17 +59,78 @@ public class UserController {
     public UserController(
             ViewSelector viewSelector,
             UserService userService,
-            VerificationTokenService verificationTokenService,
             ApplicationEventPublisher eventPublisher
     ) {
         this.viewSelector = viewSelector;
         this.userService = userService;
-        this.verificationTokenService = verificationTokenService;
         this.eventPublisher = eventPublisher;
 
         this.modelMapper = new ModelMapper();
     }
 
+    //
+    // EXISTING USERS' PROCEDURES
+    //
+
+    // PASSWORD RECOVERY PROCEDURE
+
+    @GetMapping(UserRouteRegistry.RESET_PASSWORD_ORDER_TOKEN)
+    public String resetPasswordOrderToken(Model model) {
+        model.addAttribute("action", UserRouteRegistry.RESET_PASSWORD_ORDER_TOKEN);
+        return viewSelector.selectViewByName(UserRouteRegistry.RESET_PASSWORD_ORDER_TOKEN);
+    }
+
+    @PostMapping(UserRouteRegistry.RESET_PASSWORD_ORDER_TOKEN)
+    public String resetPasswordOrderToken(
+            @ModelAttribute("emailDTO") @Validated EmailDTO emailDTO,
+            BindingResult emailDTOResult,
+            WebRequest request,
+            RedirectAttributes redirectAttributes
+    ) {
+        String nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.RESET_PASSWORD_ORDER_TOKEN);
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.emailDTO", emailDTOResult);
+        redirectAttributes.addFlashAttribute("emailDTO", emailDTO);
+
+        if(!emailDTOResult.hasErrors()) {
+            User user = userService.findUserByEmail(emailDTO.getEmail());
+            if(user == null) {
+                emailDTOResult.rejectValue(
+                        "email",
+                        "FIXME",
+                        "This email is not registered");
+            } else if(user.getDisabled() != null) {
+                emailDTOResult.rejectValue(
+                        "email",
+                        "FIXME",
+                        "The user's account is disabled");
+            } else if(user.getVerified() == null) {
+                emailDTOResult.rejectValue(
+                        "email",
+                        "FIXME",
+                        "The user's email is not verified yet");
+            } else {
+                eventPublisher.publishEvent(
+                        userService.verificationTokenNeeded(
+                                user,
+                                request.getLocale(),
+                                request.getContextPath(),
+                                VerificationTokenPurpose.Purpose.PASSWORD_RECOVERY
+                        )
+                );
+                nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.RESET_PASSWORD_APPLY_TOKEN);
+            }
+        }
+
+        return nextStep;
+
+    }
+
+
+    //
+    // NEW USERS' PROCEDURES
+    //
+
+    // SIGN UP PROCEDURE
 
     @GetMapping(UserRouteRegistry.SIGN_UP)
     public String signUp(
@@ -114,7 +167,7 @@ public class UserController {
             try {
                 userRegistered = userService.createUser(userPrepared);
                 eventPublisher.publishEvent(
-                        new VerificationTokenNeeded(
+                        userService.verificationTokenNeeded(
                                 userRegistered,
                                 request.getLocale(),
                                 request.getContextPath(),
@@ -137,8 +190,65 @@ public class UserController {
     }
 
 
+    // EMAIL CONFIRMATION PROCEDURE (TOKEN RESEND)
+
+    @GetMapping(UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN)
+    public String confirmEmailOrderToken(Model model) {
+        model.addAttribute("action", UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN);
+        return viewSelector.selectViewByName(UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN);
+    }
+
+
+    @PostMapping(UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN)
+    public String confirmEmailOrderToken(
+            @ModelAttribute("emailDTO") @Validated EmailDTO emailDTO,
+            BindingResult emailDTOResult,
+            WebRequest request,
+            RedirectAttributes redirectAttributes
+    ) {
+        String nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN);
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.emailDTO", emailDTOResult);
+        redirectAttributes.addFlashAttribute("emailDTO", emailDTO);
+
+        if(!emailDTOResult.hasErrors()) {
+            User user = userService.findUserByEmail(emailDTO.getEmail());
+            if(user == null) {
+                emailDTOResult.rejectValue(
+                        "email",
+                        "FIXME",
+                        "This email is not registered");
+            } else if(user.getDisabled() != null) {
+                emailDTOResult.rejectValue(
+                        "email",
+                        "FIXME",
+                        "The user's account is disabled");
+            } else if(user.getVerified() != null) {
+                emailDTOResult.rejectValue(
+                        "email",
+                        "FIXME",
+                        "The user's email is already verified");
+            } else {
+                eventPublisher.publishEvent(
+                        userService.verificationTokenNeeded(
+                                user,
+                                request.getLocale(),
+                                request.getContextPath(),
+                                VerificationTokenPurpose.Purpose.EMAIL_CONFIRMATION
+                        )
+                );
+                nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.CONFIRM_EMAIL_APPLY_TOKEN);
+            }
+        }
+
+        return nextStep;
+
+    }
+
+
+    // EMAIL CONFIRMATION PROCEDURE (FINAL)
+
     @GetMapping(UserRouteRegistry.CONFIRM_EMAIL_APPLY_TOKEN)
-    public String confirmEmail(
+    public String confirmEmailApplyToken(
             Model model
     ) {
         model.addAttribute("action", UserRouteRegistry.CONFIRM_EMAIL_APPLY_TOKEN);
@@ -147,7 +257,7 @@ public class UserController {
 
 
     @PostMapping(UserRouteRegistry.CONFIRM_EMAIL_APPLY_TOKEN)
-    public String confirmEmail(
+    public String confirmEmailApplyToken(
             @ModelAttribute("verificationTokenDTO") @Validated VerificationTokenDTO verificationTokenDTO,
             BindingResult verificationTokenDTOResult,
             WebRequest request,
@@ -181,94 +291,6 @@ public class UserController {
         }
 
         return nextStep;
-    }
-
-
-    @GetMapping(UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN)
-    public String confirmEmailRetry(Model model) {
-        model.addAttribute("action", UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN);
-        return viewSelector.selectViewByName(UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN);
-    }
-
-
-    @PostMapping(UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN)
-    public String confirmEmailRetry(
-            @ModelAttribute("emailDTO") @Validated EmailDTO emailDTO,
-            BindingResult emailDTOResult,
-            WebRequest request,
-            RedirectAttributes redirectAttributes
-    ) {
-        String nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN);
-        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.emailDTO", emailDTOResult);
-        redirectAttributes.addFlashAttribute("emailDTO", emailDTO);
-
-        if(!emailDTOResult.hasErrors()) {
-            User user = userService.findUserByEmail(emailDTO.getEmail());
-            if(user == null) {
-                emailDTOResult.rejectValue(
-                        "email",
-                        "FIXME",
-                        "This email is not registered");
-            } else if(user.getVerified() != null) {
-                emailDTOResult.rejectValue(
-                        "email",
-                        "FIXME",
-                        "The user's email is already verified");
-            } else {
-                eventPublisher.publishEvent(
-                        new VerificationTokenNeeded(
-                                user,
-                                request.getLocale(),
-                                request.getContextPath(),
-                                VerificationTokenPurpose.Purpose.EMAIL_CONFIRMATION
-                        )
-                );
-                nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.CONFIRM_EMAIL_APPLY_TOKEN);
-            }
-        }
-
-        return nextStep;
-
-    }
-
-
-    @Getter
-    private class VerificationTokenNeeded extends ApplicationEvent {
-
-        private User user;
-        private Locale locale;
-        private String appURL;
-        private VerificationTokenPurpose.Purpose purpose;
-
-        private VerificationTokenNeeded(User user, Locale locale, String appURL, VerificationTokenPurpose.Purpose purpose) {
-            super(user);
-            this.user = user;
-            this.locale = locale;
-            this.appURL = appURL;
-            this.purpose = purpose;
-        }
-    }
-
-    @Component
-    private class VerificationTokenNeededListener implements ApplicationListener<VerificationTokenNeeded> {
-
-        @Override
-        public void onApplicationEvent(VerificationTokenNeeded event) {
-            this.verifyEmail(event);
-        }
-
-        private void verifyEmail(VerificationTokenNeeded event) {
-            if(event.getPurpose() == VerificationTokenPurpose.Purpose.EMAIL_CONFIRMATION) {
-                // FIXME:
-                //      do NOT address VerificationTokenService directly,
-                //      keep in mind that UserController should interact with UserService only
-                verificationTokenService.createAndSendVerificationTokenToConfirmEmail(
-                        event.getUser(),
-                        event.getAppURL(),
-                        event.getLocale()
-                );
-            }
-        }
     }
 
 }

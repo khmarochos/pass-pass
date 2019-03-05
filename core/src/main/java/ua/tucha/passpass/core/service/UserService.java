@@ -1,7 +1,11 @@
 package ua.tucha.passpass.core.service;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ua.tucha.passpass.core.model.User;
 import ua.tucha.passpass.core.model.VerificationToken;
@@ -14,6 +18,7 @@ import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundExcepti
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 @Slf4j
@@ -120,6 +125,61 @@ public class UserService {
     }
 
 
+    public VerificationTokenNeeded verificationTokenNeeded(
+            User user,
+            Locale locale,
+            String appURL,
+            VerificationTokenPurpose.Purpose purpose
+    ) {
+        return new VerificationTokenNeeded(user, locale, appURL, purpose);
+    }
+
+
+    @Getter
+    public class VerificationTokenNeeded extends ApplicationEvent {
+
+        private User user;
+        private Locale locale;
+        private String appURL;
+        private VerificationTokenPurpose.Purpose purpose;
+
+        public VerificationTokenNeeded(User user, Locale locale, String appURL, VerificationTokenPurpose.Purpose purpose) {
+            super(user);
+            this.user = user;
+            this.locale = locale;
+            this.appURL = appURL;
+            this.purpose = purpose;
+        }
+    }
+
+    @Component
+    private class VerificationTokenNeededListener implements ApplicationListener<VerificationTokenNeeded> {
+
+        @Override
+        public void onApplicationEvent(VerificationTokenNeeded event) {
+            this.verifyEmail(event);
+        }
+
+        private void verifyEmail(VerificationTokenNeeded event) {
+            if(event.getPurpose() == VerificationTokenPurpose.Purpose.PASSWORD_RECOVERY) {
+                verificationTokenService.createAndSendVerificationTokenToResetPassword(
+                        event.getUser(),
+                        event.getAppURL(),
+                        event.getLocale()
+                );
+            } else if(event.getPurpose() == VerificationTokenPurpose.Purpose.EMAIL_CONFIRMATION) {
+                verificationTokenService.createAndSendVerificationTokenToConfirmEmail(
+                        event.getUser(),
+                        event.getAppURL(),
+                        event.getLocale()
+                );
+            }
+        }
+    }
+
+
+
+
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -130,8 +190,8 @@ public class UserService {
     }
 
 
-    private java.sql.Date currentDate() {
-        return new java.sql.Date(System.currentTimeMillis());
+    private Date currentDate() {
+        return new Date(System.currentTimeMillis());
     }
 
 

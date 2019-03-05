@@ -75,20 +75,21 @@
             />
         </route>
         <route
-                name="sign-up"
+                name="reset-password"
                 path="${parent.path}/${name}"
                 view="${parent.path}/unauthorized"
-        />
-        <route
-                name="reset-password-order-token"
-                path="${parent.path}/reset-password/order-token"
-                view="${parent.path}/unauthorized"
-        />
-        <route
-                name="reset-password-apply-token"
-                path="${parent.path}/reset-password/apply-token"
-                view="${parent.path}/unauthorized"
-        />
+        >
+            <route
+                    name="order-token"
+                    path="${parent.path}/order-token"
+                    view="${parent.view}"
+            />
+            <route
+                    name="apply-token"
+                    path="${parent.path}/apply-token"
+                    view="${parent.view}"
+            />
+        </route>
     </route>
 
     <route

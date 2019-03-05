@@ -59,13 +59,13 @@ public class VerificationTokenService {
 
     // Here be public methods
 
+    // TODO: deduplicate the code
     public void sendVerificationTokenToConfirmEmail(
             VerificationToken verificationToken,
             @NotNull User user,
             @NotNull String appURL,
             @NotNull Locale locale
     ) {
-
         String tokenString =
                 verificationToken.getToken();
         // String confirmationURL = RouteRegistry.UserRouteRegistry.CONFIRM_EMAIL + "/" + verificationToken.getToken();
@@ -89,13 +89,50 @@ public class VerificationTokenService {
                 );
         ;
         // TODO: use Thymeleaf!
-
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(messageRecipient);
         email.setSubject(messageSubject);
         email.setText(messageBody);
         mailSender.send(email);
     }
+
+    // TODO: deduplicate the code
+    public void sendVerificationTokenToResetPassword(
+            VerificationToken verificationToken,
+            @NotNull User user,
+            @NotNull String appURL,
+            @NotNull Locale locale
+    ) {
+        String tokenString =
+                verificationToken.getToken();
+        // String confirmationURL = RouteRegistry.UserRouteRegistry.CONFIRM_EMAIL + "/" + verificationToken.getToken();
+        String confirmationURL =
+                appURL + "/" + tokenString;
+        String[] messageArgs =
+                new String[]{confirmationURL, tokenString};
+        String messageRecipient =
+                user.getEmail();
+        String messageSubject =
+                messages.getMessage(
+                        "core.service.VerificationTokenService.sendVerificationTokenToResetPassword.message.subject",
+                        null,
+                        locale
+                );
+        String messageBody =
+                messages.getMessage(
+                        "core.service.VerificationTokenService.sendVerificationTokenToResetPassword.message.body",
+                        messageArgs,
+                        locale
+                );
+        ;
+        // TODO: use Thymeleaf!
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(messageRecipient);
+        email.setSubject(messageSubject);
+        email.setText(messageBody);
+        mailSender.send(email);
+    }
+
 
     public void createAndSendVerificationTokenToConfirmEmail(
             @NotNull User user,
@@ -104,6 +141,15 @@ public class VerificationTokenService {
     ) {
         VerificationToken verificationToken = createVerificationToken(user, VerificationTokenPurpose.Purpose.EMAIL_CONFIRMATION);
         sendVerificationTokenToConfirmEmail(verificationToken, user, appURL, locale);
+    }
+
+    public void createAndSendVerificationTokenToResetPassword(
+            @NotNull User user,
+            @NotNull String appURL,
+            @NotNull Locale locale
+    ) {
+        VerificationToken verificationToken = createVerificationToken(user, VerificationTokenPurpose.Purpose.PASSWORD_RECOVERY);
+        sendVerificationTokenToResetPassword(verificationToken, user, appURL, locale);
     }
 
 

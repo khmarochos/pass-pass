@@ -9,6 +9,15 @@
               th:text="|хуй|"/>
         <attr sel="footer"
               th:replace="~{_snippets/footer :: footer}"/>
+
+        <!-- tabs -->
+
+        <attr sel="#existing-user-tab"
+              th:classappend="${
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_IN) ||
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_ORDER_TOKEN) ||
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_APPLY_TOKEN)
+              } ? 'active' : ''"/>
         <attr sel="#existing-user-tab-header"
               th:text="#{web.resources.templates.user.unauthorized.existing-user-tab-header}"/>
         <attr sel="#new-user-tab"
@@ -24,6 +33,64 @@
                     (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).CONFIRM_EMAIL_APPLY_TOKEN)
               } ? 'active' : ''"
               th:text="#{web.resources.templates.user.unauthorized.new-user-tab-header}"/>
+
+        <!-- cards -->
+
+        <attr sel="#reset-password-order-token-card">
+            <attr sel="#reset-password-order-token-card-header">
+                <attr sel="a"
+                      th:aria-expanded="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_ORDER_TOKEN} ? true : false"
+                      th:text="#{web.resources.templates.user.unauthorized.reset-password-order-token-card.reset-password-order-token-card-header}"/>
+            </attr>
+            <attr sel="#reset-password-order-token-card-content"
+                  th:classappend="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_ORDER_TOKEN} ? 'show' : ''">
+                <attr sel="#reset-password-order-token-heading"
+                      th:text="#{web.resources.templates.user.unauthorized.reset-password-order-token-card.reset-password-order-token-heading}"/>
+                <attr sel="#reset-password-order-token-call"
+                      th:text="#{web.resources.templates.user.unauthorized.reset-password-order-token-card.reset-password-order-token-call}"/>
+            </attr>
+            <attr sel="#reset-password-order-token-form"
+                  th:action="@{${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_ORDER_TOKEN}}"
+                  th:object="${emailDTO}">
+                <attr sel="#reset-password-order-token-form-email-field"
+                      th:field="*{email}"
+                      th:errorclass="is-invalid"
+                      th:placeholder="#{web.resources.templates.user.unauthorized.reset-password-order-token-card.reset-password-order-token-form.email-field.placeholder}"/>
+                <attr sel="#reset-password-order-token-form-email-field-feedback"
+                      th:each="error: ${#fields.errors('email')}"
+                      th:text="${error}"/>
+                <attr sel="button"
+                      th:text="#{web.resources.templates.user.unauthorized.reset-password-order-token-card.reset-password-order-token-form.submit-button}"/>
+            </attr>
+        </attr>
+
+        <attr sel="#reset-password-apply-token-card">
+            <attr sel="#reset-password-apply-token-card-header">
+                <attr sel="a"
+                      th:aria-expanded="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_APPLY_TOKEN} ? true : false"
+                      th:text="#{web.resources.templates.user.unauthorized.reset-password-apply-token-card.reset-password-apply-token-card-header}"/>
+            </attr>
+            <attr sel="#reset-password-apply-token-card-content"
+                  th:classappend="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_APPLY_TOKEN} ? 'show' : ''">
+                <attr sel="#reset-password-apply-token-heading"
+                      th:text="#{web.resources.templates.user.unauthorized.reset-password-apply-token-card.reset-password-apply-token-heading}"/>
+                <attr sel="#reset-password-apply-token-call"
+                      th:text="#{web.resources.templates.user.unauthorized.reset-password-apply-token-card.reset-password-apply-token-call}"/>
+            </attr>
+            <attr sel="#reset-password-apply-token-form"
+                  th:action="@{${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_APPLY_TOKEN}}"
+                  th:object="${verificationTokenDTO}">
+                <attr sel="#reset-password-apply-token-form-token-field"
+                      th:field="*{verificationToken}"
+                      th:errorclass="is-invalid"
+                      th:placeholder="#{web.resources.templates.user.unauthorized.reset-password-apply-token-card.reset-password-apply-token-form.token-field.placeholder}"/>
+                <attr sel="#reset-password-apply-token-form-token-field-feedback"
+                      th:each="error: ${#fields.errors('verificationToken')}"
+                      th:text="${error}"/>
+                <attr sel="button"
+                      th:text="#{web.resources.templates.user.unauthorized.reset-password-apply-token-card.reset-password-apply-token-form.submit-button}"/>
+            </attr>
+        </attr>
 
         <attr sel="#sign-up-card">
             <attr sel="#sign-up-card-header">
