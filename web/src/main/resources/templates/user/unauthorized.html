@@ -45,8 +45,190 @@
                         </a>
                 </ul>
                 <div class="tab-content">
-
                     <div role="tabpanel" id="existing-user-tab" class="tab-pane">
+                        <div class="panel-body">
+
+                            <div class="accordion" id="existing-user-accordion">
+
+                                <div class="card gray-bg" id="sign-in-card">
+                                    <div class="card-header" id="sign-in-card-header">
+                                        <h5 class="mb-0">
+                                            <a
+                                                    data-toggle="collapse"
+                                                    data-target="#sign-in-card-content"
+                                                    aria-controls="sign-in-card-content"
+                                                    class="accordion-toggle"
+                                                    role="button"
+                                            >
+                                                LOG IN
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div
+                                            id="sign-in-card-content"
+                                            class="collapse in"
+                                            aria-labelledby="sign-in-card-header"
+                                            data-parent="#existing-user-accordion"
+                                    >
+                                        <div class="card-body">
+                                            <h3 id="sign-in-heading">USER AUTHENTICATION</h3>
+                                            <p id="sign-in-call">PLEASE, SIGN IN TO SEE IT IN ACTION</p>
+
+                                            <form
+                                                    id="sign-in-form"
+                                                    class="m-t"
+                                                    role="form"
+                                                    method="POST"
+                                                    action="/404"
+                                            >
+                                                <div class="form-group">
+                                                    <input
+                                                            id="sign-in-form-email-field"
+                                                            type="email"
+                                                            class="form-control"
+                                                            placeholder="EMAIL"
+                                                            required=""
+                                                    />
+                                                    <div id="sign-in-form-email-field-feedback"
+                                                         class="invalid-feedback"></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input
+                                                            id="sign-in-form-password-field"
+                                                            type="password"
+                                                            class="form-control"
+                                                            placeholder="PASSWORD"
+                                                            required=""
+                                                    />
+                                                    <div id="sign-in-form-password-field-feedback"
+                                                         class="invalid-feedback"></div>
+                                                </div>
+                                                <button
+                                                        type="submit"
+                                                        class="btn btn-primary block full-width m-b">
+                                                    LOG IN
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card gray-bg" id="reset-password-order-token-card">
+                                    <div class="card-header" id="reset-password-order-token-card-header">
+                                        <h5 class="mb-0">
+                                            <a
+                                                    data-toggle="collapse"
+                                                    data-target="#reset-password-order-token-card-content"
+                                                    aria-controls="reset-password-order-token-card-content"
+                                                    class="accordion-toggle"
+                                                    role="button"
+                                            >
+                                                PASSWORD RECOVERY
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div
+                                            id="reset-password-order-token-card-content"
+                                            class="collapse in"
+                                            aria-labelledby="reset-password-order-token-card-header"
+                                            data-parent="#existing-user-accordion"
+                                    >
+                                        <div class="card-body">
+                                            <h3 id="reset-password-order-token-heading">ORDER A NEW TOKEN</h3>
+                                            <p id="reset-password-order-token-call">PLEASE, ENTER YOUR EMAIL TO GET A
+                                                RECOVERY
+                                                TOKEN</p>
+
+                                            <form
+                                                    id="reset-password-order-token-form"
+                                                    class="m-t"
+                                                    role="form"
+                                                    method="POST"
+                                                    action="/404"
+                                            >
+                                                <div class="form-group">
+                                                    <input
+                                                            id="reset-password-order-token-form-email-field"
+                                                            type="email"
+                                                            class="form-control"
+                                                            placeholder="EMAIL"
+                                                            required=""
+                                                    />
+                                                    <div id="reset-password-order-token-form-email-field-feedback"
+                                                         class="invalid-feedback"></div>
+                                                </div>
+                                                <button
+                                                        type="submit"
+                                                        class="btn btn-primary block full-width m-b">
+                                                    GET A TOKEN
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card gray-bg" id="reset-password-apply-token-card">
+                                    <div class="card-header" id="reset-password-apply-token-card-header">
+                                        <h5 class="mb-0">
+                                            <a
+                                                    data-toggle="collapse"
+                                                    data-target="#reset-password-apply-token-card-content"
+                                                    aria-controls="reset-password-apply-token-card-content"
+                                                    class="accordion-toggle"
+                                                    role="button"
+                                            >
+                                                PASSWORD RECOVERY
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div
+                                            id="reset-password-apply-token-card-content"
+                                            class="collapse in"
+                                            aria-labelledby="reset-password-apply-token-card-header"
+                                            data-parent="#existing-user-accordion"
+                                    >
+                                        <div class="card-body">
+                                            <h3 id="reset-password-apply-token-heading">APPLY THE TOKEN YOU'VE GOT</h3>
+                                            <p id="reset-password-apply-token-call">PLEASE, ENTER THE VERIFICATION TOKEN
+                                                TO RESET YOUR PASSWORD</p>
+
+                                            <form
+                                                    id="reset-password-apply-token-form"
+                                                    class="m-t"
+                                                    role="form"
+                                                    method="POST"
+                                                    action="/404"
+                                            >
+                                                <div class="form-group">
+                                                    <input
+                                                            id="reset-password-apply-token-form-token-field"
+                                                            type="text"
+                                                            class="form-control"
+                                                            placeholder="TOKEN"
+                                                            required=""
+                                                    />
+                                                    <div id="reset-password-apply-token-form-token-field-feedback"
+                                                         class="invalid-feedback"></div>
+                                                </div>
+                                                <button
+                                                        type="submit"
+                                                        class="btn btn-primary block full-width m-b">
+                                                    APPLY A TOKEN
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
 
                     <div role="tabpanel" id="new-user-tab" class="tab-pane">
@@ -115,7 +297,8 @@
                                                             placeholder="PASSWORD"
                                                             required=""
                                                     />
-                                                    <div id="password-field-feedback" class="invalid-feedback"></div>
+                                                    <div id="sign-up-form-password-field-feedback"
+                                                         class="invalid-feedback"></div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="checkbox i-checks">
@@ -164,7 +347,8 @@
                                     >
                                         <div class="card-body">
                                             <h3 id="confirm-email-order-token-heading">ORDER A NEW TOKEN</h3>
-                                            <p id="confirm-email-order-token-call">PLEASE, ENTER YOUR EMAIL TO GET A NEW TOKEN</p>
+                                            <p id="confirm-email-order-token-call">PLEASE, ENTER YOUR EMAIL TO GET A NEW
+                                                TOKEN</p>
 
                                             <form
                                                     id="confirm-email-order-token-form"
@@ -218,7 +402,8 @@
                                     >
                                         <div class="card-body">
                                             <h3 id="confirm-email-apply-token-heading">APPLY THE TOKEN YOU'VE GOT</h3>
-                                            <p id="confirm-email-apply-token-call">PLEASE, ENTER THE VERIFICATION TOKEN TO FINISH
+                                            <p id="confirm-email-apply-token-call">PLEASE, ENTER THE VERIFICATION TOKEN
+                                                TO FINISH
                                                 REGISTRATION</p>
 
                                             <form
