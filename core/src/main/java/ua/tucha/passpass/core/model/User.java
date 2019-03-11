@@ -20,18 +20,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
-// A type for enabling password encryption mechanism
-// @TypeDefs
-//         ({
-//                 @TypeDef(
-//                         name="encryptedString",
-//                         typeClass= EncryptedStringType.class,
-//                         parameters={
-//                                 @Parameter(name = "encryptorRegisteredName", value = "STRING_ENCRYPTOR")
-//                         }
-//                 )
-//         })
-
 @Table
 @Entity
 @Data
@@ -56,7 +44,6 @@ public class User {
     private String email;
 
     @NotNull
-    // @Type(type="encryptedString")
     private String password;
 
     @NotNull
