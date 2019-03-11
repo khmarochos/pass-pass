@@ -40,7 +40,6 @@ public class NoteController {
 
     @GetMapping(RouteRegistry.NoteRouteRegistry.FIRST_LEVEL)
     public String listNotes(Model model) {
-        model.addAttribute("action", RouteRegistry.NoteRouteRegistry.FIRST_LEVEL);
         return viewSelector.selectViewByName(RouteRegistry.NoteRouteRegistry.FIRST_LEVEL);
     }
 }

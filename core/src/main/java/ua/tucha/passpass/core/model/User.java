@@ -6,13 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate5.type.EncryptedStringType;
 import ua.tucha.passpass.core.model.validator.ValidEmail;
-import ua.tucha.passpass.core.model.validator.ValidPassword;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,16 +21,16 @@ import java.util.Date;
 import java.util.List;
 
 // A type for enabling password encryption mechanism
-@TypeDefs
-        ({
-                @TypeDef(
-                        name="encryptedString",
-                        typeClass= EncryptedStringType.class,
-                        parameters={
-                                @Parameter(name = "encryptorRegisteredName", value = "STRING_ENCRYPTOR")
-                        }
-                )
-        })
+// @TypeDefs
+//         ({
+//                 @TypeDef(
+//                         name="encryptedString",
+//                         typeClass= EncryptedStringType.class,
+//                         parameters={
+//                                 @Parameter(name = "encryptorRegisteredName", value = "STRING_ENCRYPTOR")
+//                         }
+//                 )
+//         })
 
 @Table
 @Entity
@@ -61,9 +55,8 @@ public class User {
     @Column(unique=true)
     private String email;
 
-    @ValidPassword
     @NotNull
-    @Type(type="encryptedString")
+    // @Type(type="encryptedString")
     private String password;
 
     @NotNull

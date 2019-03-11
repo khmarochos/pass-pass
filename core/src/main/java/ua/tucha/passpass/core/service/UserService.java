@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ua.tucha.passpass.core.model.User;
@@ -30,16 +31,19 @@ public class UserService {
 
     // services
     private final VerificationTokenService verificationTokenService;
+    private final PasswordEncoder passwordEncoder;
 
 
     // the constructor
     @Autowired
     public UserService(
             UserRepository userRepository,
-            VerificationTokenService verificationTokenService
+            VerificationTokenService verificationTokenService,
+            PasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;
         this.verificationTokenService = verificationTokenService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -54,6 +58,7 @@ public class UserService {
         }
         Date currentDate = new Date();
         user.setCreated(currentDate);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         updateUser(user);
         return user;
     }
