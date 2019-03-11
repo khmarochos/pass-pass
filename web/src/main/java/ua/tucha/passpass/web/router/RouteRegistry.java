@@ -17,6 +17,7 @@ public class RouteRegistry {
         public static final String READ = FIRST_LEVEL + "/read";
         public static final String UPDATE = FIRST_LEVEL + "/update";
         public static final String DELETE = FIRST_LEVEL + "/delete";
+        public static final String SIGN_OUT = FIRST_LEVEL + "/sign-out";
         public static final String SIGN_IN = FIRST_LEVEL + "/sign-in";
         public static final String RESET_PASSWORD_ORDER_TOKEN = FIRST_LEVEL + "/reset-password/order-token";
         public static final String RESET_PASSWORD_APPLY_TOKEN = FIRST_LEVEL + "/reset-password/apply-token";

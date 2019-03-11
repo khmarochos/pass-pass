@@ -19,6 +19,11 @@
                     (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_APPLY_TOKEN)
               } ? 'active' : ''"/>
         <attr sel="#existing-user-tab-header"
+              th:classappend="${
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_IN) ||
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_ORDER_TOKEN) ||
+                    (action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).RESET_PASSWORD_APPLY_TOKEN)
+              } ? 'active' : ''"
               th:text="#{web.resources.templates.user.unauthorized.existing-user-tab-header}"/>
         <attr sel="#new-user-tab"
               th:classappend="${
@@ -35,6 +40,41 @@
               th:text="#{web.resources.templates.user.unauthorized.new-user-tab-header}"/>
 
         <!-- cards -->
+
+        <attr sel="#sign-in-card">
+            <attr sel="#sign-in-card-header">
+                <attr sel="a"
+                      th:aria-expanded="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_IN} ? true : false"
+                      th:text="#{web.resources.templates.user.unauthorized.sign-up-card.sign-in-card-header}"/>
+            </attr>
+            <attr sel="#sign-in-card-content"
+                  th:classappend="${action == T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_IN} ? 'show' : ''">
+                <attr sel="#sign-in-heading"
+                      th:text="#{web.resources.templates.user.unauthorized.sign-in-card.sign-in-heading}"/>
+                <attr sel="#sign-in-call"
+                      th:text="#{web.resources.templates.user.unauthorized.sign-in-card.sign-in-call}"/>
+                <attr sel="#sign-in-form"
+                      th:action="@{${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_IN}}"
+                      th:object="${userDTO}">
+                    <attr sel="#sign-in-form-email-field"
+                          th:field="*{email}"
+                          th:errorclass="is-invalid"
+                          th:placeholder="#{web.resources.templates.user.unauthorized.sign-in-card.sign-in-form.email-field.placeholder}"/>
+                    <attr sel="#sign-in-form-email-field-feedback"
+                          th:each="error: ${#fields.errors('email')}"
+                          th:text="${error}"/>
+                    <attr sel="#sign-in-form-password-field"
+                          th:field="*{password}"
+                          th:errorclass="is-invalid"
+                          th:placeholder="#{web.resources.templates.user.unauthorized.sign-in-card.sign-in-form.password-field.placeholder}"/>
+                    <attr sel="#sign-in-form-password-field-feedback"
+                          th:each="error: ${#fields.errors('password')}"
+                          th:text="${error}"/>
+                    <attr sel="button"
+                          th:text="#{web.resources.templates.user.unauthorized.sign-in-card.sign-in-form.submit-button}"/>
+                </attr>
+            </attr>
+        </attr>
 
         <attr sel="#reset-password-order-token-card">
             <attr sel="#reset-password-order-token-card-header">

@@ -37,6 +37,7 @@ public class ViewSelector {
                 .createUnmarshaller()
                 .unmarshal(new ClassPathResource("routes.xml").getFile());
         jxPathContext = JXPathContext.newContext(viewRegistry);
+        log.debug("Unmarshalled ViewRegistry is ready: {}", viewRegistry);
         interpolateParameters(null, viewRegistry);
     }
 
@@ -88,7 +89,7 @@ public class ViewSelector {
 
     }
 
-        public Route getRouteByName(String name) {
+    public Route getRouteByName(String name) {
         String xPathExpression = "";
         ArrayList<String> chunkList = new ArrayList<>(Arrays.asList(name.split("/")));
         chunkList.remove(0);

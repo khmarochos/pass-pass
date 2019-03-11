@@ -54,7 +54,33 @@
                 view="${path}"
         />
         <route
+                name="sign-out"
+                path="${parent.path}/${name}"
+                view="${path}"
+        />
+        <route
                 name="sign-in"
+                path="${parent.path}/${name}"
+                view="${parent.path}/unauthorized"
+        />
+        <route
+                name="reset-password"
+                path="${parent.path}/${name}"
+                view="${parent.path}/unauthorized"
+        >
+            <route
+                    name="order-token"
+                    path="${parent.path}/order-token"
+                    view="${parent.view}"
+            />
+            <route
+                    name="apply-token"
+                    path="${parent.path}/apply-token"
+                    view="${parent.view}"
+            />
+        </route>
+        <route
+                name="sign-up"
                 path="${parent.path}/${name}"
                 view="${parent.path}/unauthorized"
         />
@@ -71,22 +97,6 @@
             <route
                     name="apply-token"
                     path="${parent.path}/${name}"
-                    view="${parent.view}"
-            />
-        </route>
-        <route
-                name="reset-password"
-                path="${parent.path}/${name}"
-                view="${parent.path}/unauthorized"
-        >
-            <route
-                    name="order-token"
-                    path="${parent.path}/order-token"
-                    view="${parent.view}"
-            />
-            <route
-                    name="apply-token"
-                    path="${parent.path}/apply-token"
                     view="${parent.view}"
             />
         </route>

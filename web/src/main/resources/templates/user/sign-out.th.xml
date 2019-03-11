@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+
+    <thlogic>
+
+        <attr sel="#title"
+              th:text="#{web.resources.templates.user.unauthorized.title}"/>
+        <attr sel="#logo-text"
+              th:text="|хуй|"/>
+        <attr sel="footer"
+              th:replace="~{_snippets/footer :: footer}"/>
+
+        <attr sel="#sign-out-form"
+              th:action="@{${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_OUT}}"
+        >
+            <attr sel="button"
+                  th:text="#{web.resources.templates.user.sign-out.submit-button}"/>
+        </attr>
+
+    </thlogic>
+</html>

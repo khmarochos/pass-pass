@@ -41,5 +41,6 @@ dependencies {
     // Database encryption services
     compile group: 'org.jasypt', name: 'jasypt', version: '1.9.2'
     compile group: 'org.jasypt', name: 'jasypt-hibernate5', version: '1.9.3-SNAPSHOT'
+
 }
 

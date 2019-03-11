@@ -50,27 +50,49 @@ public class UserController {
         return new EmailDTO();
     }
 
-    private final ViewSelector viewSelector;
     private final UserService userService;
+    private final ViewSelector viewSelector;
     private final ApplicationEventPublisher eventPublisher;
     private final ModelMapper modelMapper;
 
     @Autowired
     public UserController(
-            ViewSelector viewSelector,
             UserService userService,
+            ViewSelector viewSelector,
             ApplicationEventPublisher eventPublisher
     ) {
-        this.viewSelector = viewSelector;
         this.userService = userService;
+        this.viewSelector = viewSelector;
         this.eventPublisher = eventPublisher;
 
         this.modelMapper = new ModelMapper();
     }
 
     //
-    // EXISTING USERS' PROCEDURES
+    // AUTHORIZED USERS' PROCEDURES
     //
+
+    // SIGN OUT PROCEDURE
+
+    @GetMapping(UserRouteRegistry.SIGN_OUT)
+    public String signOut(Model model) {
+        model.addAttribute("action", UserRouteRegistry.SIGN_OUT);
+        return viewSelector.selectViewByName(UserRouteRegistry.SIGN_OUT);
+    }
+
+
+    //
+    // UNAUTHORIZED USERS' PROCEDURES
+    //
+
+    // SIGN IN PROCEDURE
+
+    @GetMapping(UserRouteRegistry.SIGN_IN)
+    public String signIn(Model model) {
+        model.addAttribute("action", UserRouteRegistry.SIGN_IN);
+        return viewSelector.selectViewByName(UserRouteRegistry.SIGN_IN);
+    }
+
 
     // PASSWORD RECOVERY PROCEDURE
 

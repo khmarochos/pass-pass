@@ -1,6 +1,8 @@
 package ua.tucha.passpass.web.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jasypt.encryption.pbe.PBEStringEncryptor;
+import org.jasypt.hibernate5.encryptor.HibernatePBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -12,6 +14,8 @@ import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.http.CacheControl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
