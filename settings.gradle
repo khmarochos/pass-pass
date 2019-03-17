@@ -1,4 +1,4 @@
-rootProject.name = 'pass-pass'
+rootProject.name = 'passpass'
 include 'core'
 include 'web'
 

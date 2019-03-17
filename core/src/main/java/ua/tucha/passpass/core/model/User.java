@@ -1,6 +1,5 @@
 package ua.tucha.passpass.core.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -63,5 +65,13 @@ public class User {
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private List<VerificationToken> verificationTokenList;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_x_user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_role_id", referencedColumnName = "id")
+    )
+    private List<UserRole> userRoleList;
 
 }

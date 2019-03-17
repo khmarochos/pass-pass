@@ -1,4 +1,4 @@
-package ua.tucha.passpass.web.model.DTO;
+package ua.tucha.passpass.web.model;
 
 import lombok.Data;
 import ua.tucha.passpass.core.model.validator.ValidEmail;

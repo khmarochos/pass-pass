@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,9 +23,9 @@ import ua.tucha.passpass.core.service.exception.EmailNotUniqueException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenMispurposedException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
-import ua.tucha.passpass.web.model.DTO.EmailDTO;
-import ua.tucha.passpass.web.model.DTO.UserDTO;
-import ua.tucha.passpass.web.model.DTO.VerificationTokenDTO;
+import ua.tucha.passpass.web.model.EmailDTO;
+import ua.tucha.passpass.web.model.UserDTO;
+import ua.tucha.passpass.web.model.VerificationTokenDTO;
 import ua.tucha.passpass.web.router.RouteRegistry.UserRouteRegistry;
 import ua.tucha.passpass.web.router.ViewSelector;
 
@@ -145,6 +147,27 @@ public class UserController {
 
         return nextStep;
 
+    }
+
+    @GetMapping(UserRouteRegistry.RESET_PASSWORD_APPLY_TOKEN)
+    public String resetPasswordApplyToken(Model model) {
+        model.addAttribute("action", UserRouteRegistry.RESET_PASSWORD_APPLY_TOKEN);
+        return viewSelector.selectViewByName(UserRouteRegistry.RESET_PASSWORD_APPLY_TOKEN);
+    }
+
+    @PostMapping(UserRouteRegistry.RESET_PASSWORD_APPLY_TOKEN)
+    public String resetPasswordApplyToken(
+            @ModelAttribute("verificationTokenDTO") @Validated VerificationTokenDTO verificationTokenDTO,
+            BindingResult verificationTokenDTOResult,
+            WebRequest request,
+            RedirectAttributes redirectAttributes
+    ) {
+        String nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.RESET_PASSWORD_APPLY_TOKEN);
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.emailDTO", verificationTokenDTOResult);
+        redirectAttributes.addFlashAttribute("verificationTokenDTO", verificationTokenDTO);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken("vladimir@melnik.net.ua", null, null);
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        return nextStep;
     }
 
 
