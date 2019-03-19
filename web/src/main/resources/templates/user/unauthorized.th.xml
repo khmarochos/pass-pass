@@ -66,10 +66,13 @@
                     <attr sel="#sign-in-form-password-field"
                           th:field="*{password}"
                           th:errorclass="is-invalid"
+                          th:classappend=" ${springSecurityExceptionMessage} ? 'is-invalid' : ''"
                           th:placeholder="#{web.resources.templates.user.unauthorized.sign-in-card.sign-in-form.password-field.placeholder}"/>
                     <attr sel="#sign-in-form-password-field-feedback"
                           th:each="error: ${#fields.errors('password')}"
                           th:text="${error}"/>
+                    <attr sel="#sign-in-form-spring-security-feedback"
+                          th:text="${springSecurityExceptionMessage}"/>
                     <attr sel="button"
                           th:text="#{web.resources.templates.user.unauthorized.sign-in-card.sign-in-form.submit-button}"/>
                 </attr>

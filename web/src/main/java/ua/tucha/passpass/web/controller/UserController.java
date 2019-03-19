@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.session.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,9 @@ import ua.tucha.passpass.web.model.UserDTO;
 import ua.tucha.passpass.web.model.VerificationTokenDTO;
 import ua.tucha.passpass.web.router.RouteRegistry.UserRouteRegistry;
 import ua.tucha.passpass.web.router.ViewSelector;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
@@ -90,7 +94,13 @@ public class UserController {
     // SIGN IN PROCEDURE
 
     @GetMapping(UserRouteRegistry.SIGN_IN)
-    public String signIn(Model model) {
+    public String signIn(Model model, HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession();
+        Exception springSecurityException = (Exception) session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+        if (springSecurityException != null) {
+            session.removeAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+            model.addAttribute("springSecurityExceptionMessage", springSecurityException.getMessage());
+        }
         model.addAttribute("action", UserRouteRegistry.SIGN_IN);
         return viewSelector.selectViewByName(UserRouteRegistry.SIGN_IN);
     }
@@ -115,19 +125,19 @@ public class UserController {
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.emailDTO", emailDTOResult);
         redirectAttributes.addFlashAttribute("emailDTO", emailDTO);
 
-        if(!emailDTOResult.hasErrors()) {
+        if (!emailDTOResult.hasErrors()) {
             User user = userService.findUserByEmail(emailDTO.getEmail());
-            if(user == null) {
+            if (user == null) {
                 emailDTOResult.rejectValue(
                         "email",
                         "FIXME",
                         "This email is not registered");
-            } else if(user.getDisabled() != null) {
+            } else if (user.getDisabled() != null) {
                 emailDTOResult.rejectValue(
                         "email",
                         "FIXME",
                         "The user's account is disabled");
-            } else if(user.getVerified() == null) {
+            } else if (user.getVerified() == null) {
                 emailDTOResult.rejectValue(
                         "email",
                         "FIXME",
@@ -255,19 +265,19 @@ public class UserController {
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.emailDTO", emailDTOResult);
         redirectAttributes.addFlashAttribute("emailDTO", emailDTO);
 
-        if(!emailDTOResult.hasErrors()) {
+        if (!emailDTOResult.hasErrors()) {
             User user = userService.findUserByEmail(emailDTO.getEmail());
-            if(user == null) {
+            if (user == null) {
                 emailDTOResult.rejectValue(
                         "email",
                         "FIXME",
                         "This email is not registered");
-            } else if(user.getDisabled() != null) {
+            } else if (user.getDisabled() != null) {
                 emailDTOResult.rejectValue(
                         "email",
                         "FIXME",
                         "The user's account is disabled");
-            } else if(user.getVerified() != null) {
+            } else if (user.getVerified() != null) {
                 emailDTOResult.rejectValue(
                         "email",
                         "FIXME",

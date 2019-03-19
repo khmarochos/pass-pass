@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,11 +23,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class UserPrivilege {
 
-        public UserPrivilege(@NotNull @NotEmpty String name) {
-            this.name = name;
-        }
+        // public UserPrivilege(@NotNull @NotEmpty String name) {
+        //     this.name = name;
+        // }
 
         // Table fields
 
@@ -33,6 +36,7 @@ public class UserPrivilege {
         @GeneratedValue(strategy = GenerationType.AUTO)
         private Long id;
 
+        @NonNull        // needed for @RequiredArgsConstructor
         @NotNull
         @NotEmpty
         private String name;
