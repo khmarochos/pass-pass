@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-// import ua.tucha.passpass.core.model.UserPrivilege;
 import ua.tucha.passpass.core.model.UserPrivilege;
 import ua.tucha.passpass.core.model.UserRole;
 import ua.tucha.passpass.core.service.UserPrivilegeService;
@@ -32,13 +31,10 @@ public class SetupDatabase implements ApplicationListener<ContextRefreshedEvent>
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (!needSetup) return;
-        UserPrivilege userPrivilege1 = userPrivilegeService.findOrCreate("ZALOOPA1");
-        UserPrivilege userPrivilege2 = userPrivilegeService.findOrCreate("ZALOOPA2");
-        UserPrivilege userPrivilege3 = userPrivilegeService.findOrCreate("ZALOOPA3");
         UserRole userRole = userRoleService.findOrCreate("ROLE_USER", Arrays.asList(new UserPrivilege[]{
-                userPrivilege1,
-                userPrivilege2,
-                userPrivilege3
+                userPrivilegeService.findOrCreate("note_own_read"),
+                userPrivilegeService.findOrCreate("note_own_send"),
+                userPrivilegeService.findOrCreate("note_own_delete")
         }));
         needSetup = false;
     }

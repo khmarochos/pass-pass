@@ -5,10 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ua.tucha.passpass.core.model.User;
+import ua.tucha.passpass.core.model.UserRole;
 import ua.tucha.passpass.core.model.VerificationToken;
 import ua.tucha.passpass.core.model.VerificationTokenPurpose;
 import ua.tucha.passpass.core.repository.UserRepository;
@@ -18,7 +21,10 @@ import ua.tucha.passpass.core.service.exception.VerificationTokenMispurposedExce
 import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 

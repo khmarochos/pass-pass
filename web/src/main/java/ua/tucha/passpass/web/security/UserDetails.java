@@ -1,24 +1,39 @@
 package ua.tucha.passpass.web.security;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import ua.tucha.passpass.core.model.User;
 
 import java.util.Collection;
 
-public class UserPrincipal implements UserDetails {
+@Slf4j
+@NoArgsConstructor
+public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
+    @Setter
     private User user;
 
     @Autowired
-    public UserPrincipal(User user) {
+    private UserDetailsService userDetailsService;
+
+    public UserDetails(User user) {
         this.user = user;
+    }
+
+    @Autowired
+    public void setUserDetailsService(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if(userDetailsService == null) {
+            log.warn("OOPS!");
+        }
+        return userDetailsService.getUserGrantedAuthorities(user);
     }
 
     @Override
