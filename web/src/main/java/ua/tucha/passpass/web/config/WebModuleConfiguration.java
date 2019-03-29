@@ -1,8 +1,11 @@
 package ua.tucha.passpass.web.config;
 
 import lombok.extern.slf4j.Slf4j;
+// import nz.net.ultraq.thymeleaf.LayoutDialect;
+import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,6 +19,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import ua.tucha.passpass.web.security.UserDetailsFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -28,16 +32,19 @@ public class WebModuleConfiguration implements WebMvcConfigurer {
     private final PropertyResolver environment;
     private final MessageSource messageSource;
     private final LocalValidatorFactoryBean localValidatorFactoryBean;
+    private final AutowireCapableBeanFactory autowireCapableBeanFactory;
 
     @Autowired
     public WebModuleConfiguration(
             PropertyResolver environment,
             MessageSource messageSource,
-            @Qualifier("coreLocalValidatorFactoryBean") LocalValidatorFactoryBean localValidatorFactoryBean
+            @Qualifier("coreLocalValidatorFactoryBean") LocalValidatorFactoryBean localValidatorFactoryBean,
+            AutowireCapableBeanFactory autowireCapableBeanFactory
     ) {
         this.environment = environment;
         this.messageSource = messageSource;
         this.localValidatorFactoryBean = localValidatorFactoryBean;
+        this.autowireCapableBeanFactory = autowireCapableBeanFactory;
     }
 
     @Override
@@ -58,6 +65,14 @@ public class WebModuleConfiguration implements WebMvcConfigurer {
     @Bean(name = "webLocalValidatorFactoryBean")
     public LocalValidatorFactoryBean getValidator() {
         return this.localValidatorFactoryBean;
+    }
+
+    @Bean(name = "userDetails")
+    public UserDetailsFactory userDetailsFactory() { return new UserDetailsFactory(autowireCapableBeanFactory); }
+
+    @Bean(name = "layoutDialect")
+    public LayoutDialect layoutDialect() {
+        return new LayoutDialect();
     }
 
 }

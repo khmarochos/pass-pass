@@ -30,9 +30,6 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(userDetailsService == null) {
-            log.warn("OOPS!");
-        }
         return userDetailsService.getUserGrantedAuthorities(user);
     }
 

@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ua.tucha.passpass.core.constant.VerificationTokenPurpose;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,9 +30,16 @@ public class VerificationToken {
 
     private String token;
 
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(nullable = false, name = "owner", referencedColumnName = "id")
-    private User user;
+    @ManyToOne(
+            targetEntity = User.class,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            nullable = false,
+            name = "owner",
+            referencedColumnName = "id"
+    )
+    private User owner;
 
     private Date expiry;
 

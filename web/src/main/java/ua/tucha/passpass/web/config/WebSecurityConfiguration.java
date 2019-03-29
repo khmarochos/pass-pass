@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -36,7 +38,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .permitAll()
                     .loginPage(RouteRegistry.UserRouteRegistry.SIGN_IN)
                     .failureUrl(RouteRegistry.UserRouteRegistry.SIGN_IN)
-                    .defaultSuccessUrl(RouteRegistry.UserRouteRegistry.SIGN_OUT)
+                    .defaultSuccessUrl(RouteRegistry.HOME)
                     .usernameParameter("email")
                     .passwordParameter("password")
                     .and()
@@ -56,6 +58,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
+    }
+
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
 }

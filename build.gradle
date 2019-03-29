@@ -19,7 +19,7 @@ apply plugin: 'io.spring.dependency-management'
 group = 'ua.tucha'
 mainClassName = 'ua.tucha.passpass'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '8'
 
 bootJar {
 	baseName = 'gs-accessing-data-mysql'

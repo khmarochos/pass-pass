@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns:layout="http://www.thymeleaf.org/">
+
+    <thlogic>
+
+        <attr sel="head">
+
+            <attr sel="#title"
+                  th:text="#{web.resources.templates.note.list.title}"/>
+
+        </attr>
+
+        <attr sel="#main-page-content"
+              layout:fragment="main-page-content"/>
+
+        <attr sel="#sent-note-list-table"
+              th:each="sentNote : ${sentNoteList}">
+            <attr sel="td.sent-note-list-field-id"
+                  th:text="${sentNote.id}"/>
+            <attr sel="td.sent-note-list-field-subject"
+                  th:text="${sentNote.subject}"/>
+        </attr>
+
+    </thlogic>
+
+</html>

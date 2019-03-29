@@ -48,8 +48,15 @@ public class UserRole {
 
     @ManyToMany
     @JoinTable(name = "user_role_x_user_privilege",
-            joinColumns = @JoinColumn(name = "user_role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_privilege_id", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(
+                    name = "user_role_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "user_privilege_id",
+                    referencedColumnName = "id"
+            )
+    )
     private List<UserPrivilege> userPrivilegeList;
 
 }

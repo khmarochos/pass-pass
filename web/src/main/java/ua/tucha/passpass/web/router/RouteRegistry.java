@@ -3,8 +3,11 @@ package ua.tucha.passpass.web.router;
 // TODO: it would be cool to get rid of it
 public class RouteRegistry {
 
+    public static final String HOME = "/note/list"; // FIXME: a temporary measure
+
     public static class NoteRouteRegistry {
         public static final String FIRST_LEVEL = "/note";
+        public static final String LIST = FIRST_LEVEL + "/list";
         public static final String CREATE = FIRST_LEVEL + "/create";
         public static final String READ = FIRST_LEVEL + "/read";
         public static final String UPDATE = FIRST_LEVEL + "/update";
@@ -13,7 +16,7 @@ public class RouteRegistry {
 
     public static class UserRouteRegistry {
         public static final String FIRST_LEVEL = "/user";
-        public static final String CREATE = FIRST_LEVEL + "/create"; // TODO: not the same as sign-up
+        public static final String CREATE = FIRST_LEVEL + "/create"; // not the same as sign-up
         public static final String READ = FIRST_LEVEL + "/read";
         public static final String UPDATE = FIRST_LEVEL + "/update";
         public static final String DELETE = FIRST_LEVEL + "/delete";

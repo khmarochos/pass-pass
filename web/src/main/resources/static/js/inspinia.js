@@ -207,7 +207,7 @@ $(window).bind("resize", function () {
 });
 
 // Local Storage functions
-// Set proper body class and plugins based on user configuration
+// Set proper body class and plugins based on owner configuration
 $(document).ready(function () {
     if (localStorageSupport()) {
 

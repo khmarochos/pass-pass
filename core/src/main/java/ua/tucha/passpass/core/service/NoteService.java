@@ -21,9 +21,5 @@ public class NoteService {
         this.noteRepository = noteRepository;
     }
 
-    public Note getNote(@NotNull long noteId) {
-        Optional<Note> note = noteRepository.findById(noteId);
-        return note.isEmpty() ? null : note.get();
-    }
 
 }

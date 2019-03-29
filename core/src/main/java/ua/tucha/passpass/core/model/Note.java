@@ -26,11 +26,31 @@ public class Note {
     @NotNull
     private String content;
 
+    @ToString.Exclude
     @NotNull
-    private long sender;
+    @ManyToOne(
+            targetEntity = User.class,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            nullable = false,
+            name = "sender",
+            referencedColumnName = "id"
+    )
+    private User sender;
 
+    @ToString.Exclude
     @NotNull
-    private long recipient;
+    @ManyToOne(
+            targetEntity = User.class,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            nullable = false,
+            name = "recipient",
+            referencedColumnName = "id"
+    )
+    private User recipient;
 
     @NotNull
     private boolean encrypted;
@@ -42,6 +62,7 @@ public class Note {
 
     private Date removed;
 
+    @NotNull
     private Date sent;
 
     private Date received;

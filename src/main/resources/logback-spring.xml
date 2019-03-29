@@ -4,4 +4,5 @@
     <logger name="org.springframework" level="INFO" />
     <logger name="org.thymeleaf" level="INFO" />
     <logger name="org.hibernate" level="INFO" />
+    <logger name="org.hibernate.SQL" level="DEBUG" />
 </configuration>

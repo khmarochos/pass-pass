@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ua.tucha.passpass.core.model.User;
 import ua.tucha.passpass.core.model.VerificationToken;
-import ua.tucha.passpass.core.model.VerificationTokenPurpose;
+import ua.tucha.passpass.core.constant.VerificationTokenPurpose;
 import ua.tucha.passpass.core.repository.VerificationTokenRepository;
 import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenMispurposedException;
@@ -50,7 +50,7 @@ public class VerificationTokenService {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(uniqueIdentifier);
         verificationToken.setExpiry(calculateExpiryDate());
-        verificationToken.setUser(user);
+        verificationToken.setOwner(user);
         verificationToken.setVerificationTokenPurpose(purpose);
         verificationTokenRepository.save(verificationToken);
         return verificationToken;

@@ -11,6 +11,7 @@ import ua.tucha.passpass.core.model.User;
 import ua.tucha.passpass.core.model.UserRole;
 import ua.tucha.passpass.core.repository.UserRepository;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,23 +20,30 @@ import java.util.List;
 @Service("webUserDetailsService")
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
+    @Resource(name = "&userDetails")
     private UserDetailsFactory userDetailsFactory;
+
+    @Autowired
+    public UserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username);
-        UserDetails userDetails;
         if(user == null) {
+            log.debug("Can't find user {}", username);
             throw new UsernameNotFoundException("Username not found");
         }
+        UserDetails userDetails;
         try {
             userDetails = userDetailsFactory.getObjectForUser(user);
         } catch (Exception e) {
-            throw new UsernameNotFoundException("Something went wrong");
+            log.error("An exception raised: {}", e.toString());
+            throw new UsernameNotFoundException("Something gone wrong: " + e.toString());
         }
         return userDetails;
     }

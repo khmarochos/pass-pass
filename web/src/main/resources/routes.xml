@@ -7,6 +7,11 @@
             view="${path}"
     >
         <route
+                name="list"
+                path="${parent.path}/${name}"
+                view="${path}"
+        />
+        <route
                 name="create"
                 path="${parent.path}/${name}"
                 view="${path}"

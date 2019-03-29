@@ -8,9 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ua.tucha.passpass.core.model.User;
 import ua.tucha.passpass.core.service.NoteService;
+import ua.tucha.passpass.core.service.UserService;
 import ua.tucha.passpass.web.router.RouteRegistry;
 import ua.tucha.passpass.web.router.ViewSelector;
+
+import java.security.Principal;
 
 @Slf4j
 @Controller
@@ -20,26 +24,36 @@ import ua.tucha.passpass.web.router.ViewSelector;
 })
 public class NoteController {
 
+    private final ModelMapper modelMapper;
     private final NoteService noteService;
+    private final UserService userService;
     private final ViewSelector viewSelector;
     private final ApplicationEventPublisher eventPublisher;
-    private final ModelMapper modelMapper;
 
     @Autowired
     public NoteController(
             NoteService noteService,
+            UserService userService,
             ViewSelector viewSelector,
             ApplicationEventPublisher eventPublisher
     ) {
         this.noteService = noteService;
+        this.userService = userService;
         this.viewSelector = viewSelector;
         this.eventPublisher = eventPublisher;
-
         this.modelMapper = new ModelMapper();
     }
 
-    @GetMapping(RouteRegistry.NoteRouteRegistry.FIRST_LEVEL)
-    public String listNotes(Model model) {
-        return viewSelector.selectViewByName(RouteRegistry.NoteRouteRegistry.FIRST_LEVEL);
+    @GetMapping(RouteRegistry.NoteRouteRegistry.LIST)
+    public String listNotes(
+            Model model,
+            Principal principal
+    ) {
+        User user = userService.findUserByEmail(principal.getName());
+        log.debug("User {} is logged in", user.getEmail());
+        model.addAttribute("receivedNoteList", user.getReceivedNoteList());
+        model.addAttribute("sentNoteList", user.getSentNoteList());
+        return viewSelector.selectViewByName(RouteRegistry.NoteRouteRegistry.LIST);
     }
+
 }

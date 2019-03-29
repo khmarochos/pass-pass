@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns:layout="http://www.thymeleaf.org/">
+
+    <thlogic>
+
+        <attr sel="head">
+
+            <attr sel="title"
+                  th:text="#{web.resources.templates._layouts.main.title}"
+                  layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE"/>
+
+        </attr>
+
+        <attr sel="footer"
+              th:replace="~{_snippets/footer :: footer}"/>
+
+        <attr sel="#main-page-content"
+              layout:fragment="main-page-content"/>
+
+    </thlogic>
+
+</html>

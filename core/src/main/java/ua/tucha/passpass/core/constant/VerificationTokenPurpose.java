@@ -1,4 +1,4 @@
-package ua.tucha.passpass.core.model;
+package ua.tucha.passpass.core.constant;
 
 public class VerificationTokenPurpose {
     public enum Purpose {

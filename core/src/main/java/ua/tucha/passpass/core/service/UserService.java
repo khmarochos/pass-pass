@@ -5,15 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ua.tucha.passpass.core.model.User;
-import ua.tucha.passpass.core.model.UserRole;
 import ua.tucha.passpass.core.model.VerificationToken;
-import ua.tucha.passpass.core.model.VerificationTokenPurpose;
+import ua.tucha.passpass.core.constant.VerificationTokenPurpose;
 import ua.tucha.passpass.core.repository.UserRepository;
 import ua.tucha.passpass.core.service.exception.EmailNotUniqueException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredException;
@@ -21,10 +18,7 @@ import ua.tucha.passpass.core.service.exception.VerificationTokenMispurposedExce
 import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -53,11 +47,6 @@ public class UserService {
     }
 
 
-    public User getUser(@NotNull long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return user.isEmpty() ? null : user.get();
-    }
-
     public User createUser(User user) throws EmailNotUniqueException {
         if (emailExists(user.getEmail())) {
             throw new EmailNotUniqueException();
@@ -68,6 +57,7 @@ public class UserService {
         updateUser(user);
         return user;
     }
+
 
     public void updateUser(User user) {
         userRepository.save(user);
@@ -87,7 +77,7 @@ public class UserService {
                 true,
                 true
         );
-        return verificationToken.getUser();
+        return verificationToken.getOwner();
     }
 
     public User applyVerificationToken(
@@ -104,11 +94,11 @@ public class UserService {
                 true,
                 true
         );
-        return verificationTokenService.findVerificationTokenByToken(verificationToken).getUser();
+        return verificationTokenService.findVerificationTokenByToken(verificationToken).getOwner();
     }
 
 
-    public void verifyEmailByToken(String verificationToken) throws
+    public User verifyEmailByToken(String verificationToken) throws
             VerificationTokenNotFoundException,
             VerificationTokenExpiredException,
             VerificationTokenMispurposedException
@@ -118,11 +108,21 @@ public class UserService {
             user.setVerified(currentDate());
             userRepository.save(user);
         }
+        return user;
+    }
+
+
+    public User authenticateByToken(String verificationToken) throws
+            VerificationTokenMispurposedException,
+            VerificationTokenNotFoundException,
+            VerificationTokenExpiredException
+    {
+        return applyVerificationToken(verificationToken, VerificationTokenPurpose.Purpose.PASSWORD_RECOVERY);
     }
 
 
     public User findUserByVerificationToken(VerificationToken verificationToken) {
-        return verificationToken.getUser();
+        return verificationToken.getOwner();
     }
 
     public User findUserByVerificationToken(String verificationTokenString) {
