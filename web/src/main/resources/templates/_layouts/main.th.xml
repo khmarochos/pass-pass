@@ -14,6 +14,9 @@
         <attr sel="footer"
               th:replace="~{_snippets/footer :: footer}"/>
 
+        <attr sel="#main-page-heading"
+              layout:fragment="main-page-heading"/>
+
         <attr sel="#main-page-content"
               layout:fragment="main-page-content"/>
 

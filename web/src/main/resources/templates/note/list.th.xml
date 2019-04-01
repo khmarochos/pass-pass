@@ -10,15 +10,85 @@
 
         </attr>
 
-        <attr sel="#main-page-content"
-              layout:fragment="main-page-content"/>
+        <attr sel="#main-page-heading"
+              layout:fragment="main-page-heading">
 
-        <attr sel="#sent-note-list-table"
-              th:each="sentNote : ${sentNoteList}">
-            <attr sel="td.sent-note-list-field-id"
-                  th:text="${sentNote.id}"/>
-            <attr sel="td.sent-note-list-field-subject"
-                  th:text="${sentNote.subject}"/>
+            <attr sel="h1"
+                  th:text="#{web.resources.templates.note.list.header}"/>
+
+        </attr>
+
+        <attr sel="#main-page-content"
+              layout:fragment="main-page-content">
+
+            <attr sel="#received-note-list-header"
+                  th:text="#{web.resources.templates.note.list.header.received-note-list}"/>
+            <attr sel="#received-note-list-table">
+                <attr sel="thead">
+                    <attr sel="tr">
+                        <attr sel="th.received-note-list-header-id"
+                              th:text="#{web.resources.templates.note.list.received-note-list-header-id}"/>
+                        <attr sel="th.received-note-list-header-subject"
+                              th:text="#{web.resources.templates.note.list.received-note-list-header-subject}"/>
+                        <attr sel="th.received-note-list-header-recipient"
+                              th:text="#{web.resources.templates.note.list.received-note-list-header-recipient}"/>
+                        <attr sel="th.received-note-list-header-sent"
+                              th:text="#{web.resources.templates.note.list.received-note-list-header-sent}"/>
+                        <attr sel="th.received-note-list-header-received"
+                              th:text="#{web.resources.templates.note.list.received-note-list-header-received}"/>
+                    </attr>
+                </attr>
+                <attr sel="tbody">
+                    <attr sel="tr"
+                          th:each="receivedNote : ${receivedNoteList}">
+                        <attr sel="td.received-note-list-field-id"
+                              th:text="${receivedNote.id}"/>
+                        <attr sel="td.received-note-list-field-subject"
+                              th:text="${receivedNote.subject}"/>
+                        <attr sel="td.received-note-list-field-recipient"
+                              th:text="${receivedNote.recipient.email}"/>
+                        <attr sel="td.received-note-list-field-sent"
+                              th:text="${receivedNote.sent}"/>
+                        <attr sel="td.received-note-list-field-received"
+                              th:text="${(receivedNote.received != null) ? receivedNote.received : 'unreceived'}"/>
+                    </attr>
+                </attr>
+            </attr>
+
+            <attr sel="#sent-note-list-header"
+                  th:text="#{web.resources.templates.note.list.header.sent-note-list}"/>
+            <attr sel="#sent-note-list-table">
+                <attr sel="thead">
+                    <attr sel="tr">
+                        <attr sel="th.sent-note-list-header-id"
+                              th:text="#{web.resources.templates.note.list.sent-note-list-header-id}"/>
+                        <attr sel="th.sent-note-list-header-subject"
+                              th:text="#{web.resources.templates.note.list.sent-note-list-header-subject}"/>
+                        <attr sel="th.sent-note-list-header-recipient"
+                              th:text="#{web.resources.templates.note.list.sent-note-list-header-recipient}"/>
+                        <attr sel="th.sent-note-list-header-sent"
+                              th:text="#{web.resources.templates.note.list.sent-note-list-header-sent}"/>
+                        <attr sel="th.sent-note-list-header-received"
+                              th:text="#{web.resources.templates.note.list.sent-note-list-header-received}"/>
+                    </attr>
+                </attr>
+                <attr sel="tbody">
+                    <attr sel="tr"
+                          th:each="sentNote : ${sentNoteList}">
+                        <attr sel="td.sent-note-list-field-id"
+                              th:text="${sentNote.id}"/>
+                        <attr sel="td.sent-note-list-field-subject"
+                              th:text="${sentNote.subject}"/>
+                        <attr sel="td.sent-note-list-field-recipient"
+                              th:text="${sentNote.recipient.email}"/>
+                        <attr sel="td.sent-note-list-field-sent"
+                              th:text="${sentNote.sent}"/>
+                        <attr sel="td.sent-note-list-field-received"
+                              th:text="${(sentNote.received != null) ? sentNote.received : 'unreceived'}"/>
+                    </attr>
+                </attr>
+            </attr>
+
         </attr>
 
     </thlogic>

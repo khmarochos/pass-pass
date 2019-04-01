@@ -10,14 +10,68 @@
 
 <body>
 
+<section id="main-page-heading">
+    <h1>LIST OF NOTES</h1>
+</section>
+
 <section id="main-page-content">
-    <p>ЕБАШЭВО</p>
-    <table id="sent-note-list-table">
-        <tr>
-            <td class="sent-note-list-field-id"></td>
-            <td class="sent-note-list-field-subject"></td>
-        </tr>
-    </table>
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5 id="received-note-list-header">RECEIVED NOTES</h5>
+        </div>
+        <div class="ibox-content">
+            <table id="received-note-list-table" class="table">
+                <thead>
+                <tr>
+                    <th class="received-note-list-header-id">ID</th>
+                    <th class="received-note-list-header-subject">SUBJECT</th>
+                    <th class="received-note-list-header-recipient">RECIPIENT</th>
+                    <th class="received-note-list-header-sent">SENT</th>
+                    <th class="received-note-list-header-received">RECEIVED</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="received-note-list-field-id"></td>
+                    <td class="received-note-list-field-subject"></td>
+                    <td class="received-note-list-field-recipient"></td>
+                    <td class="received-note-list-field-sent"></td>
+                    <td class="received-note-list-field-received"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5 id="sent-note-list-header">SENT NOTES</h5>
+        </div>
+        <div class="ibox-content">
+            <table id="sent-note-list-table" class="table">
+                <thead>
+                <tr>
+                    <th class="sent-note-list-header-id">ID</th>
+                    <th class="sent-note-list-header-subject">SUBJECT</th>
+                    <th class="sent-note-list-header-recipient">RECIPIENT</th>
+                    <th class="sent-note-list-header-sent">SENT</th>
+                    <th class="sent-note-list-header-received">RECEIVED</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="sent-note-list-field-id"></td>
+                    <td class="sent-note-list-field-subject"></td>
+                    <td class="sent-note-list-field-recipient"></td>
+                    <td class="sent-note-list-field-sent"></td>
+                    <td class="sent-note-list-field-received"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--script>
+        var table = new Tabulator("#sent-note-list-table", {});
+    </script-->
 </section>
 
 </body>
