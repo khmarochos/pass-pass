@@ -69,10 +69,19 @@
             </table>
         </div>
     </div>
-    <!--script>
-        var table = new Tabulator("#sent-note-list-table", {});
-    </script-->
 </section>
+
+<section id="additional-js-libraries">
+    <script src="/static/js/plugins/tabulator/tabulator.min.js"></script>
+</section>
+
+<section id="additional-js-code">
+    <script>
+        new Tabulator("#received-note-list-table", {});
+        new Tabulator("#sent-note-list-table", {});
+    </script>
+</section>
+
 
 </body>
 

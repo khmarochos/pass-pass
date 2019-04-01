@@ -20,6 +20,12 @@
         <attr sel="#main-page-content"
               layout:fragment="main-page-content"/>
 
+        <attr sel="#additional-js-libraries"
+              layout:fragment="additional-js-libraries"/>
+
+        <attr sel="#additional-js-code"
+              layout:fragment="additional-js-code"/>
+
     </thlogic>
 
 </html>

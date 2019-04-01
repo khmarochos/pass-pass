@@ -91,6 +91,12 @@
 
         </attr>
 
+        <attr sel="#additional-js-libraries"
+              layout:fragment="additional-js-libraries" />
+
+        <attr sel="#additional-js-code"
+              layout:fragment="additional-js-code" />
+
     </thlogic>
 
 </html>
