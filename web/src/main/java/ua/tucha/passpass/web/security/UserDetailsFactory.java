@@ -36,6 +36,6 @@ public class UserDetailsFactory implements FactoryBean<UserDetails> {
 
     @Override
     public boolean isSingleton() {
-        return false;
+        return true;
     }
 }

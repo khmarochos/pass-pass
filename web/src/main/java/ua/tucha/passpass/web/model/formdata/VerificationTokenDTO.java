@@ -1,4 +1,4 @@
-package ua.tucha.passpass.web.model;
+package ua.tucha.passpass.web.model.formdata;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

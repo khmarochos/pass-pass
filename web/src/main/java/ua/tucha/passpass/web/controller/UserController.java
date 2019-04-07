@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -28,9 +26,9 @@ import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredExceptio
 import ua.tucha.passpass.core.service.exception.VerificationTokenMispurposedException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenNotAppliedException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
-import ua.tucha.passpass.web.model.EmailDTO;
-import ua.tucha.passpass.web.model.UserDTO;
-import ua.tucha.passpass.web.model.VerificationTokenDTO;
+import ua.tucha.passpass.web.model.formdata.EmailDTO;
+import ua.tucha.passpass.web.model.formdata.UserDTO;
+import ua.tucha.passpass.web.model.formdata.VerificationTokenDTO;
 import ua.tucha.passpass.web.router.RouteRegistry;
 import ua.tucha.passpass.web.router.RouteRegistry.UserRouteRegistry;
 import ua.tucha.passpass.web.router.ViewSelector;
@@ -39,8 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 

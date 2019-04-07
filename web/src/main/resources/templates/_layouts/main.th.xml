@@ -8,11 +8,14 @@
             <attr sel="title"
                   th:text="#{web.resources.templates._layouts.main.title}"
                   layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE"/>
-
+            
         </attr>
 
         <attr sel="footer"
               th:replace="~{_snippets/footer :: footer}"/>
+
+        <attr sel="#frontend-message"
+              th:replace="~{_snippets/frontend_message :: frontend-message}"/>
 
         <attr sel="#main-page-heading"
               layout:fragment="main-page-heading"/>

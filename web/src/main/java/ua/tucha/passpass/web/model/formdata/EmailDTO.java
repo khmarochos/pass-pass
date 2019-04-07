@@ -1,4 +1,4 @@
-package ua.tucha.passpass.web.model;
+package ua.tucha.passpass.web.model.formdata;
 
 import lombok.Data;
 import ua.tucha.passpass.core.model.validator.ValidEmail;

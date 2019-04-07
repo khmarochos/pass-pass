@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<div th:fragment="frontend-message">
+    <div th:each="i : ${#numbers.sequence(1, session.frontendMessageContainer.hasFrontendMessage())}"
+         th:text="${session.frontendMessageContainer.popFrontendMessage().getMessageTitle()}"/>
+    </div>
+</div>
+</html>
