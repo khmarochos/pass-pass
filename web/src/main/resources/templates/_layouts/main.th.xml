@@ -17,6 +17,12 @@
         <attr sel="#frontend-message"
               th:replace="~{_snippets/frontend_message :: frontend-message}"/>
 
+        <attr sel="#sign-out-href"
+              th:href="${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_OUT}"/>
+
+        <attr sel="#sign-out-text"
+              th:text="#{web.resources.templates._layouts.main.sign_out}"/>
+
         <attr sel="#main-page-heading"
               layout:fragment="main-page-heading"/>
 
