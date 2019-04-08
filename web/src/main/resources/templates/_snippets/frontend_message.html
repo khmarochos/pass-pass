@@ -1,8 +1,48 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<div th:fragment="frontend-message">
-    <div th:each="i : ${#numbers.sequence(1, session.frontendMessageContainer.hasFrontendMessage())}"
-         th:text="${session.frontendMessageContainer.popFrontendMessage().getMessageTitle()}"/>
-    </div>
-</div>
+<script type="text/javascript" th:fragment="frontend-message" th:inline="javascript">
+    /*<![CDATA[*/
+    const messages = [
+        [#
+            th:each = "i : ${#numbers.sequence(1, session.frontendMessageContainer.hasFrontendMessage())}"
+            th:with = "message=${session.frontendMessageContainer.popFrontendMessage()}"
+        ][ [[${message.getMessageType()}]], [[${message.getMessageTitle()}]], [[${message.getMessageBody()}]] ], [/]
+    ];
+
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "progressBar": true,
+        "preventDuplicates": false,
+        "positionClass": "toast-top-right",
+        "onclick": null,
+        "showDuration": "400",
+        "hideDuration": "1000",
+        "timeOut": "7000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    for (var i = 0, length = messages.length; i < length; i++) {
+        var message = messages[i];
+        switch (message[0]) {
+            case 'SUCCESS':
+                toastr.success(message[2], message[1]);
+                break;
+            case 'INFO':
+                toastr.info(message[2], message[1]);
+                break;
+            case 'WARNING':
+                toastr.warning(message[2], message[1]);
+                break;
+            default:
+                toastr.error(message[2], message[1]);
+                break;
+        }
+    }
+    /*]]>*/
+</script>
 </html>
