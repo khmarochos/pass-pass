@@ -1,6 +1,7 @@
 package ua.tucha.passpass.web.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import ua.tucha.passpass.web.model.FrontendMessage;
@@ -11,11 +12,11 @@ import javax.servlet.http.HttpSession;
 @Service
 public class FrontendMessageStackService {
 
-    public static final String FRONTEND_MESSAGE_CONTAINER_ATTRIBUTE_NAME =
+    private static final String FRONTEND_MESSAGE_CONTAINER_ATTRIBUTE_NAME =
             "frontendMessageContainer";
 
 
-    public FrontendMessageStack initializeFrontendMessageStack() {
+    private FrontendMessageStack initializeFrontendMessageStack() {
 
         HttpSession httpSession = (
                 (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()

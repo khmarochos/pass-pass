@@ -1,5 +1,6 @@
 package ua.tucha.passpass.web.util;
 
+import groovy.util.logging.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -12,18 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class FrontendMessageInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private FrontendMessageStackService frontendMessageStackService;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        frontendMessageStackService.pushFrontendMessage(
-                new FrontendMessage(
-                        FrontendMessage.MessageType.INFO,
-                        "hello",
-                        "well, hello!"
-                )
-        );
         return true;
     }
 

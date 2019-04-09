@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.tucha.passpass.web.router.RouteRegistry;
+import ua.tucha.passpass.web.security.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +23,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     @Qualifier("webUserDetailsService")
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -39,6 +43,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .loginPage(RouteRegistry.UserRouteRegistry.SIGN_IN)
                     .failureUrl(RouteRegistry.UserRouteRegistry.SIGN_IN)
                     .defaultSuccessUrl(RouteRegistry.HOME)
+                    .successHandler(authenticationSuccessHandler)
                     .usernameParameter("email")
                     .passwordParameter("password")
                     .and()

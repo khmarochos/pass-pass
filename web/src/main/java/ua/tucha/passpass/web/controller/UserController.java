@@ -26,12 +26,14 @@ import ua.tucha.passpass.core.service.exception.VerificationTokenExpiredExceptio
 import ua.tucha.passpass.core.service.exception.VerificationTokenMispurposedException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenNotAppliedException;
 import ua.tucha.passpass.core.service.exception.VerificationTokenNotFoundException;
+import ua.tucha.passpass.web.model.FrontendMessage;
 import ua.tucha.passpass.web.model.formdata.EmailDTO;
 import ua.tucha.passpass.web.model.formdata.UserDTO;
 import ua.tucha.passpass.web.model.formdata.VerificationTokenDTO;
 import ua.tucha.passpass.web.router.RouteRegistry;
 import ua.tucha.passpass.web.router.RouteRegistry.UserRouteRegistry;
 import ua.tucha.passpass.web.router.ViewSelector;
+import ua.tucha.passpass.web.service.FrontendMessageStackService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -65,6 +67,7 @@ public class UserController {
 
     private final ModelMapper modelMapper;
     private final UserService userService;
+    private final FrontendMessageStackService frontendMessageStackService;
     private final ViewSelector viewSelector;
     private final ApplicationEventPublisher eventPublisher;
     private final AuthenticationManager authenticationManager;
@@ -72,11 +75,13 @@ public class UserController {
     @Autowired
     public UserController(
             UserService userService,
+            FrontendMessageStackService frontendMessageStackService,
             ViewSelector viewSelector,
             ApplicationEventPublisher eventPublisher,
             AuthenticationManager authenticationManager
     ) {
         this.userService = userService;
+        this.frontendMessageStackService = frontendMessageStackService;
         this.viewSelector = viewSelector;
         this.eventPublisher = eventPublisher;
         this.authenticationManager = authenticationManager;
@@ -195,6 +200,14 @@ public class UserController {
                     httpServletRequest.getSession(true)
             )) {
                 nextStep = "redirect:" + viewSelector.selectPathByName(RouteRegistry.HOME);
+                frontendMessageStackService.pushFrontendMessage(
+                        new FrontendMessage(
+                                FrontendMessage.MessageType.INFO,
+                                "Welcome!",
+                                "It's nice to see you here"
+                                // TODO: get these messages from `message.properties`
+                        )
+                );
             }
         }
 
