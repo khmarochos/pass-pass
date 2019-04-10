@@ -36,6 +36,7 @@ public class FrontendMessageStackService {
 
     }
 
+
     public void pushFrontendMessage(FrontendMessage frontendMessage) {
 
         FrontendMessageStack frontendMessageStack = initializeFrontendMessageStack();
@@ -44,6 +45,7 @@ public class FrontendMessageStackService {
 
     }
 
+
     public FrontendMessage popFrontendMessage() {
 
         FrontendMessageStack frontendMessageStack = initializeFrontendMessageStack();
@@ -51,6 +53,7 @@ public class FrontendMessageStackService {
         return frontendMessageStack.popFrontendMessage();
 
     }
+
 
     public int hasFrontendMessage() {
 

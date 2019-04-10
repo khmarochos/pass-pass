@@ -204,7 +204,7 @@ public class UserController {
                         new FrontendMessage(
                                 FrontendMessage.MessageType.INFO,
                                 "Welcome!",
-                                "It's nice to see you here"
+                                "Temporary access granted"
                                 // TODO: get these messages from `message.properties`
                         )
                 );

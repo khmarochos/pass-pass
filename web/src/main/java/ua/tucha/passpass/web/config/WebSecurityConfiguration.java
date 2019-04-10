@@ -14,7 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.tucha.passpass.web.router.RouteRegistry;
-import ua.tucha.passpass.web.security.AuthenticationSuccessHandler;
+import ua.tucha.passpass.web.security.CustomAuthenticationFailureHandler;
+import ua.tucha.passpass.web.security.CustomAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -25,8 +26,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
-    
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+    @Autowired
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -41,9 +45,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                         .permitAll()
                     .loginPage(RouteRegistry.UserRouteRegistry.SIGN_IN)
-                    .failureUrl(RouteRegistry.UserRouteRegistry.SIGN_IN)
-                    .defaultSuccessUrl(RouteRegistry.HOME)
-                    .successHandler(authenticationSuccessHandler)
+                    .failureUrl(RouteRegistry.UserRouteRegistry.SIGN_IN)    // unneeded
+                    .defaultSuccessUrl(RouteRegistry.HOME)                  // unneeded
+                    .successHandler(customAuthenticationSuccessHandler)
+                    .failureHandler(customAuthenticationFailureHandler)
                     .usernameParameter("email")
                     .passwordParameter("password")
                     .and()

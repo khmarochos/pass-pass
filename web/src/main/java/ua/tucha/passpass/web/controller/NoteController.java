@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.tucha.passpass.core.model.User;
 import ua.tucha.passpass.core.service.NoteService;
@@ -50,10 +51,22 @@ public class NoteController {
             Principal principal
     ) {
         User user = userService.findUserByEmail(principal.getName());
-        log.debug("User {} is logged in", user.getEmail());
+        log.debug("User {} would like to get the notes' lists", user.getEmail());
         model.addAttribute("receivedNoteList", user.getReceivedNoteList());
         model.addAttribute("sentNoteList", user.getSentNoteList());
         return viewSelector.selectViewByName(RouteRegistry.NoteRouteRegistry.LIST);
+    }
+
+
+    @GetMapping(RouteRegistry.NoteRouteRegistry.READ + "/{noteId}")
+    public String readNote(
+            @PathVariable long noteId,
+            Model model,
+            Principal principal
+    ) {
+        User user = userService.findUserByEmail(principal.getName());
+        log.debug("User {} would like to read note {}", user.getEmail(), noteId);
+        return viewSelector.selectViewByName(RouteRegistry.NoteRouteRegistry.READ);
     }
 
 }

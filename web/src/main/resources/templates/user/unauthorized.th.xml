@@ -9,6 +9,8 @@
               th:text="|хуй|"/>
         <attr sel="footer"
               th:replace="~{_snippets/footer :: footer}"/>
+        <attr sel="#frontend-message"
+              th:replace="~{_snippets/frontend_message :: frontend-message}"/>
 
         <!-- tabs -->
 
