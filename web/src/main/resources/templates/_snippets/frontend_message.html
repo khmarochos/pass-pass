@@ -2,12 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <script type="text/javascript" th:fragment="frontend-message" th:inline="javascript">
     /*<![CDATA[*/
-    const messages = [
-        [# th:if = "${session.frontendMessageContainer} != null"][#
-            th:each = "i : ${#numbers.sequence(1, session.frontendMessageContainer.hasFrontendMessage())}"
-            th:with = "message=${session.frontendMessageContainer.popFrontendMessage()}"
-        ][ [[${message.getMessageType()}]], [[${message.getMessageTitle()}]], [[${message.getMessageBody()}]] ], [/][/]
-    ];
 
     toastr.options = {
         "closeButton": true,
@@ -24,25 +18,38 @@
         "hideEasing": "linear",
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
-    }
+    };
 
-    for (var i = 0, length = messages.length; i < length; i++) {
-        var message = messages[i];
-        switch (message[0]) {
-            case 'SUCCESS':
-                toastr.success(message[2], message[1]);
-                break;
-            case 'INFO':
-                toastr.info(message[2], message[1]);
-                break;
-            case 'WARNING':
-                toastr.warning(message[2], message[1]);
-                break;
-            default:
-                toastr.error(message[2], message[1]);
-                break;
-        }
+    function getMessage() {
+        $.ajax({
+            url: "http://127.0.0.1:8080/api/frontend-message/pop",
+            type: "GET",
+            cache: "false",
+            async: "false",
+            dataType: "json",
+            success: function (message, status) {
+                if (!!message.type) {
+                    switch (message.type) {
+                        case 'SUCCESS':
+                            toastr.success(message.body, message.title);
+                            break;
+                        case 'INFO':
+                            toastr.info(message.body, message.title);
+                            break;
+                        case 'WARNING':
+                            toastr.warning(message.body, message.title);
+                            break;
+                        default:
+                            toastr.error(message.body, message.title);
+                            break;
+                    }
+                    getMessage();
+                }
+            }
+        });
     }
+    getMessage();
+
     /*]]>*/
 </script>
 </html>

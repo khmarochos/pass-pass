@@ -70,6 +70,8 @@
                               th:text="#{web.resources.templates.note.list.sent-note-list-header-sent}"/>
                         <attr sel="th.sent-note-list-header-received"
                               th:text="#{web.resources.templates.note.list.sent-note-list-header-received}"/>
+                        <attr sel="th.sent-note-list-header-action-read"
+                              th:text="#{web.resources.templates.note.list.sent-note-list-header-action-read}"/>
                     </attr>
                 </attr>
                 <attr sel="tbody">
@@ -85,6 +87,9 @@
                               th:text="${sentNote.sent}"/>
                         <attr sel="td.sent-note-list-field-received"
                               th:text="${(sentNote.received != null) ? sentNote.received : 'unreceived'}"/>
+                        <attr sel="td.sent-note-list-field-action-read"
+                              th:text="#{web.resources.templates.note.list.sent-note-list-header-action-read}"/>
+                        </attr>
                     </attr>
                 </attr>
             </attr>

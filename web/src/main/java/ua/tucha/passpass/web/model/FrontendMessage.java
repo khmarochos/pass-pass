@@ -1,7 +1,6 @@
 package ua.tucha.passpass.web.model;
 
 import lombok.Data;
-import lombok.NonNull;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -10,13 +9,13 @@ import java.time.LocalDateTime;
 public class FrontendMessage {
 
     @NotNull
-    private MessageType messageType;
+    private MessageType type;
 
     @NotNull
-    private String messageTitle;
+    private String title;
 
     @NotNull
-    private String messageBody;
+    private String body;
 
     private LocalDateTime sent;
 
@@ -30,9 +29,9 @@ public class FrontendMessage {
     }
 
     public FrontendMessage(MessageType messageType, String messageTitle, String messageBody) {
-        this.messageType = messageType;
-        this.messageTitle = messageTitle;
-        this.messageBody = messageBody;
+        this.type = messageType;
+        this.title = messageTitle;
+        this.body = messageBody;
     }
 }
 
