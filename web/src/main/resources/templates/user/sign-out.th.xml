@@ -3,6 +3,9 @@
 
     <thlogic>
 
+        <attr sel="html"
+              layout:decorate="~{_layouts/unauthorized}"/>
+
         <attr sel="#title"
               th:text="#{web.resources.templates.user.unauthorized.title}"/>
         <attr sel="#logo-text"
@@ -10,11 +13,16 @@
         <attr sel="footer"
               th:replace="~{_snippets/footer :: footer}"/>
 
-        <attr sel="#sign-out-form"
-              th:action="@{${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_OUT}}"
-        >
-            <attr sel="button"
-                  th:text="#{web.resources.templates.user.sign-out.submit-button}"/>
+        <attr sel="#main-page-content"
+              layout:fragment="main-page-content">
+
+            <attr sel="#sign-out-form"
+                  th:action="@{${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_OUT}}"
+            >
+                <attr sel="button"
+                      th:text="#{web.resources.templates.user.sign-out.submit-button}"/>
+            </attr>
+
         </attr>
 
     </thlogic>

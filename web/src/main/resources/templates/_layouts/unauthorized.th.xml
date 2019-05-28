@@ -13,7 +13,7 @@
 
         <attr sel="footer"
               th:replace="~{_snippets/footer :: footer}"/>
-╩
+
         <attr sel="#frontend-message"
               th:replace="~{_snippets/frontend_message :: frontend-message}"/>
 
@@ -23,17 +23,8 @@
         <attr sel="#sign-out-text"
               th:text="#{web.resources.templates._layouts.main.sign_out}"/>
 
-        <attr sel="#main-page-heading"
-              layout:fragment="main-page-heading"/>
-
         <attr sel="#main-page-content"
               layout:fragment="main-page-content"/>
-
-        <attr sel="#additional-js-libraries"
-              layout:fragment="additional-js-libraries"/>
-
-        <attr sel="#additional-js-code"
-              layout:fragment="additional-js-code"/>
 
     </thlogic>
 

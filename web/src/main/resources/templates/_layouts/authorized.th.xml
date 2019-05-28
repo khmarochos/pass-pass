@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns:layout="http://www.thymeleaf.org/">
+
+    <thlogic>
+
+        <attr sel="head">
+
+            <attr sel="title"
+                  th:text="#{web.resources.templates._layouts.main.title}"
+                  layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE"/>
+            
+        </attr>
+
+        <attr sel="footer"
+              th:replace="~{_snippets/footer :: footer}"/>
+
+        <attr sel="#frontend-message"
+              th:replace="~{_snippets/frontend_message :: frontend-message}"/>
+
+        <attr sel="#sign-out-href"
+              th:href="${T(ua.tucha.passpass.web.router.RouteRegistry$UserRouteRegistry).SIGN_OUT}"/>
+
+        <attr sel="#sign-out-text"
+              th:text="#{web.resources.templates._layouts.main.sign_out}"/>
+
+        <attr sel="#main-page-heading"
+              layout:fragment="main-page-heading"/>
+
+        <attr sel="#main-page-content"
+              layout:fragment="main-page-content"/>
+
+        <attr sel="#additional-js-libraries"
+              layout:fragment="additional-js-libraries"/>
+
+        <attr sel="#additional-js-code"
+              layout:fragment="additional-js-code"/>
+
+    </thlogic>
+
+</html>

@@ -3,6 +3,9 @@
 
     <thlogic>
 
+        <attr sel="html"
+              layout:decorate="~{_layouts/authorized}"/>
+
         <attr sel="head">
 
             <attr sel="#title"
