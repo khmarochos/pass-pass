@@ -2,6 +2,8 @@ package ua.tucha.passpass.web.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Locale;
 
 @Slf4j
 @Component
@@ -26,13 +29,29 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
     @Autowired
     FrontendMessageStackService frontendMessageStackService;
 
+    @Autowired
+    MessageSource messageSource;
+
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication
+    ) throws IOException, ServletException {
+        Locale currentLocale = LocaleContextHolder.getLocale();
         frontendMessageStackService.pushFrontendMessage(
                 new FrontendMessage(
                         FrontendMessage.MessageType.SUCCESS,
-                        "Welcome!",
-                        "Nice to see you, ..."
+                        messageSource.getMessage(
+                                "web.security.CustomAuthenticationSuccessHandler.onAuthenticationSuccess.title",
+                                null,
+                                currentLocale
+                        ),
+                        messageSource.getMessage(
+                                "web.security.CustomAuthenticationSuccessHandler.onAuthenticationSuccess.body",
+                                new String[] { ((UserDetails) authentication.getPrincipal()).getUsername() },
+                                currentLocale
+                        )
                 )
         );
         String urlToRedirect = RouteRegistry.HOME;

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -33,12 +34,14 @@ import ua.tucha.passpass.web.model.formdata.VerificationTokenDTO;
 import ua.tucha.passpass.web.router.RouteRegistry;
 import ua.tucha.passpass.web.router.RouteRegistry.UserRouteRegistry;
 import ua.tucha.passpass.web.router.ViewSelector;
+import ua.tucha.passpass.web.security.UserDetails;
 import ua.tucha.passpass.web.service.FrontendMessageStackService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.security.Principal;
+import java.util.Locale;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
@@ -71,6 +74,7 @@ public class UserController {
     private final ViewSelector viewSelector;
     private final ApplicationEventPublisher eventPublisher;
     private final AuthenticationManager authenticationManager;
+    private final MessageSource messageSource;
 
     @Autowired
     public UserController(
@@ -78,13 +82,15 @@ public class UserController {
             FrontendMessageStackService frontendMessageStackService,
             ViewSelector viewSelector,
             ApplicationEventPublisher eventPublisher,
-            AuthenticationManager authenticationManager
+            AuthenticationManager authenticationManager,
+            MessageSource messageSource
     ) {
         this.userService = userService;
         this.frontendMessageStackService = frontendMessageStackService;
         this.viewSelector = viewSelector;
         this.eventPublisher = eventPublisher;
         this.authenticationManager = authenticationManager;
+        this.messageSource = messageSource;
         this.modelMapper = new ModelMapper();
     }
 
@@ -135,7 +141,8 @@ public class UserController {
             @ModelAttribute("emailDTO") @Validated EmailDTO emailDTO,
             BindingResult emailDTOResult,
             WebRequest request,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            Locale currentLocale
     ) {
         String nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.RESET_PASSWORD_ORDER_TOKEN);
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.emailDTO", emailDTOResult);
@@ -167,6 +174,21 @@ public class UserController {
                                 VerificationTokenPurpose.Purpose.PASSWORD_RECOVERY
                         )
                 );
+                frontendMessageStackService.pushFrontendMessage(
+                        new FrontendMessage(
+                                FrontendMessage.MessageType.INFO,
+                                messageSource.getMessage(
+                                        "web.controller.UserController.resetPasswordOrderToken.success.title",
+                                        null,
+                                        currentLocale
+                                ),
+                                messageSource.getMessage(
+                                        "web.controller.UserController.resetPasswordOrderToken.success.body",
+                                        new String[] { emailDTO.getEmail() },
+                                        currentLocale
+                                )
+                        )
+                );
                 nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.RESET_PASSWORD_APPLY_TOKEN);
             }
         }
@@ -186,26 +208,35 @@ public class UserController {
             @ModelAttribute("verificationTokenDTO") @Validated VerificationTokenDTO verificationTokenDTO,
             BindingResult verificationTokenDTOResult,
             HttpServletRequest httpServletRequest,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            Locale currentLocale
     ) {
         String nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.RESET_PASSWORD_APPLY_TOKEN);
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.verificationTokenDTO", verificationTokenDTOResult);
         redirectAttributes.addFlashAttribute("verificationTokenDTO", verificationTokenDTO);
 
         if (!verificationTokenDTOResult.hasErrors()) {
-            if(applyVerificationToken(
+            User user = applyVerificationToken(
                     verificationTokenDTO.getVerificationToken(),
                     VerificationTokenPurpose.Purpose.PASSWORD_RECOVERY,
                     verificationTokenDTOResult,
                     httpServletRequest.getSession(true)
-            )) {
+            );
+            if(user != null) {
                 nextStep = "redirect:" + viewSelector.selectPathByName(RouteRegistry.HOME);
                 frontendMessageStackService.pushFrontendMessage(
                         new FrontendMessage(
                                 FrontendMessage.MessageType.INFO,
-                                "Welcome!",
-                                "Temporary access granted"
-                                // TODO: get these messages from `message.properties`
+                                messageSource.getMessage(
+                                        "web.controller.UserController.resetPasswordApplyToken.success.title",
+                                        null,
+                                        currentLocale
+                                ),
+                                messageSource.getMessage(
+                                        "web.controller.UserController.resetPasswordApplyToken.success.body",
+                                        new String[] { user.getEmail() },
+                                        currentLocale
+                                )
                         )
                 );
             }
@@ -241,7 +272,8 @@ public class UserController {
             BindingResult result,
             WebRequest request,
             RedirectAttributes redirectAttributes,
-            Model model
+            Model model,
+            Locale currentLocale
     ) {
 
         String nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.SIGN_UP);
@@ -265,10 +297,25 @@ public class UserController {
                                 VerificationTokenPurpose.Purpose.EMAIL_CONFIRMATION
                         )
                 );
+                frontendMessageStackService.pushFrontendMessage(
+                        new FrontendMessage(
+                                FrontendMessage.MessageType.INFO,
+                                messageSource.getMessage(
+                                        "web.controller.UserController.signUp.success.title",
+                                        null,
+                                        currentLocale
+                                ),
+                                messageSource.getMessage(
+                                        "web.controller.UserController.signUp.success.body",
+                                        new String[] { userDTO.getEmail() },
+                                        currentLocale
+                                )
+                        )
+                );
                 nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.CONFIRM_EMAIL_APPLY_TOKEN);
             } catch (EmailNotUniqueException e) {
                 // Actually I don't like that this message won't be sent if the DTO validation fails,
-                // will definitely implement an additional check sometimes (TODO)
+                // will definitely implement an additional check sometime (TODO)
                 result.rejectValue(
                         "email",
                         "core.model.validator.EmailValidator.email_exists", new String[]{userDTO.getEmail()},
@@ -295,7 +342,8 @@ public class UserController {
             @ModelAttribute("emailDTO") @Validated EmailDTO emailDTO,
             BindingResult emailDTOResult,
             WebRequest request,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            Locale currentLocale
     ) {
         String nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.CONFIRM_EMAIL_ORDER_TOKEN);
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.emailDTO", emailDTOResult);
@@ -327,6 +375,21 @@ public class UserController {
                                 VerificationTokenPurpose.Purpose.EMAIL_CONFIRMATION
                         )
                 );
+                frontendMessageStackService.pushFrontendMessage(
+                        new FrontendMessage(
+                                FrontendMessage.MessageType.INFO,
+                                messageSource.getMessage(
+                                        "web.controller.UserController.confirmEmailOrderToken.success.title",
+                                        null,
+                                        currentLocale
+                                ),
+                                messageSource.getMessage(
+                                        "web.controller.UserController.confirmEmailOrderToken.success.body",
+                                        new String[] { emailDTO.getEmail() },
+                                        currentLocale
+                                )
+                        )
+                );
                 nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.CONFIRM_EMAIL_APPLY_TOKEN);
             }
         }
@@ -352,27 +415,44 @@ public class UserController {
             @ModelAttribute("verificationTokenDTO") @Validated VerificationTokenDTO verificationTokenDTO,
             BindingResult verificationTokenDTOResult,
             HttpServletRequest httpServletRequest,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            Locale currentLocale
     ) {
         String nextStep = "redirect:" + viewSelector.selectPathByName(UserRouteRegistry.CONFIRM_EMAIL_APPLY_TOKEN);
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.verificationTokenDTO", verificationTokenDTOResult);
         redirectAttributes.addFlashAttribute("verificationTokenDTO", verificationTokenDTO);
 
         if (!verificationTokenDTOResult.hasErrors()) {
-             if(applyVerificationToken(
+             User user = applyVerificationToken(
                     verificationTokenDTO.getVerificationToken(),
                     VerificationTokenPurpose.Purpose.EMAIL_CONFIRMATION,
                     verificationTokenDTOResult,
                     null
-            )) {
-                nextStep = "redirect:" + viewSelector.selectPathByName(RouteRegistry.HOME);
+             );
+             if(user != null) {
+                 frontendMessageStackService.pushFrontendMessage(
+                         new FrontendMessage(
+                                 FrontendMessage.MessageType.INFO,
+                                 messageSource.getMessage(
+                                         "web.controller.UserController.confirmEmailApplyToken.success.title",
+                                         null,
+                                         currentLocale
+                                 ),
+                                 messageSource.getMessage(
+                                         "web.controller.UserController.confirmEmailApplyToken.success.body",
+                                         null,
+                                         currentLocale
+                                 )
+                         )
+                 );
+                 nextStep = "redirect:" + viewSelector.selectPathByName(RouteRegistry.HOME);
              }
         }
 
         return nextStep;
     }
 
-    private boolean applyVerificationToken(
+    private User applyVerificationToken(
             String token,
             VerificationTokenPurpose.Purpose verificationTokenPurpose,
             BindingResult verificationTokenDTOResult,
@@ -380,6 +460,7 @@ public class UserController {
     )  {
         User user = null;
         try {
+
             switch (verificationTokenPurpose) {
                 case PASSWORD_RECOVERY:
                     log.debug("Password recovery initiated with token {}", token);
@@ -392,16 +473,21 @@ public class UserController {
             }
             if(user == null)
                 throw new VerificationTokenNotAppliedException();
+
             log.debug("Token {} belongs to user {}", token, user.getEmail());
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                     new UsernamePasswordAuthenticationToken(user.getEmail(), null, user.getGrantedAuthorityList());
+
             log.debug("A new UserNamePasswordAuthenticationToken object created: {}", usernamePasswordAuthenticationToken);
             SecurityContext securityContext = SecurityContextHolder.getContext();
+
             log.debug("A SecurityContext object found: {}", securityContext);
             securityContext.setAuthentication(usernamePasswordAuthenticationToken);
             httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, securityContext);
+
             log.debug("Granted temporary access to {}", user.getEmail());
-            return(true);
+
+            // return(user);
         } catch (VerificationTokenExpiredException e) {
             verificationTokenDTOResult.rejectValue(
                     "verificationToken",
@@ -429,7 +515,7 @@ public class UserController {
                     "web.controller.UserController.verification_token_not_applied",
                     "Something went wrong");
         }
-        return false;
+        return(user);
     }
 
 }

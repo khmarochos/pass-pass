@@ -19,7 +19,7 @@
 //                 new FrontendMessage(
 //                         FrontendMessage.MessageType.SUCCESS,
 //                         "Welcome!",
-//                         "Authentication completed"
+//                         "Authentication completed, access granted"
 //                         // FIXME: use message.properties!
 //                 )
 //         );
