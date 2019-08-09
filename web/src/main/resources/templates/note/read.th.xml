@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns:layout="http://www.thymeleaf.org/">
+
+    <thlogic>
+
+        <attr sel="html"
+              layout:decorate="~{_layouts/authorized}"/>
+
+        <attr sel="head">
+
+            <attr sel="#title"
+                  th:text="#{web.resources.templates.note.read.title}"/>
+
+        </attr>
+
+        <attr sel="#main-page-heading"
+              layout:fragment="main-page-heading">
+
+            <attr sel="h1"
+                  th:text="#{web.resources.templates.note.read.header}"/>
+
+        </attr>
+
+        <attr sel="#main-page-content"
+              layout:fragment="main-page-content">
+
+        <attr sel="#additional-js-libraries"
+              layout:fragment="additional-js-libraries" />
+
+        <attr sel="#additional-js-code"
+              layout:fragment="additional-js-code" />
+
+    </thlogic>
+
+</html>

@@ -22,8 +22,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '8'
 
 bootJar {
-	baseName = 'gs-accessing-data-mysql'
-	version =  '0.1.0'
+	baseName = 'passpass'
 }
 
 allprojects {
