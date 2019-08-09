@@ -11,15 +11,20 @@ third-party services (such as these: https://www.instantfundas.com/2013/04/8-ser
 
 What is done at the moment
 --------------------------
-1. User sign-up mechanism with validation.
+1. User sign-up mechanism with form fields' validation.
 2. User email verification by a token being sent.
+3. User sign-in mechanism.
+4. User's password recovery procedure.
+5. Displaying sent and received notes' lists.
+6. Popping-up notifications.
+7. Internationalization of displayed messages.
 
 Technologies and frameworks used
 --------------------------------
 * Java,
 * Spring Boot,
 * Spring MVC,
-* Hibernate,
+* JPA/Hibernate,
 * MySQL,
 * Lombok,
 * Thymeleaf,
